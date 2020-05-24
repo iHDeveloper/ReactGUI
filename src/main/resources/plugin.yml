@@ -1,0 +1,4 @@
+name: spigot-starter-plugin
+version: 0.1
+author: iHDeveloper
+main: me.ihdeveloper.spigot.starterkit.Main
