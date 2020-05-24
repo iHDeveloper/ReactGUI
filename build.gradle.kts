@@ -23,6 +23,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly(files(buildTools.serverJar.absolutePath))
+
     testCompile("junit", "junit", "4.12")
 }
 
