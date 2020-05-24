@@ -68,7 +68,7 @@ tasks {
         dependsOn(":download-build-tools")
 
         onlyIf {
-            !buildTools.server.exists()
+            !buildTools.serverJar.exists()
         }
 
         doLast {
@@ -94,7 +94,7 @@ class BuildTools (
     val temp = File(".build-tools")
     val file = File(temp, "build-tools.jar")
 
-    val server = if (useSpigot) {
+    val serverJar = if (useSpigot) {
         File(temp, "spigot-${minecraftVersion}.jar")
     } else {
         File(temp, "craftbukkit-${minecraftVersion}.jar")
