@@ -37,6 +37,7 @@ tasks {
      */
     register("setup") {
         dependsOn(":run-build-tools")
+        dependsOn(":build-run-server")
     }
 
     /**
@@ -85,6 +86,25 @@ tasks {
         }
     }
 
+    /**
+     * Build the run server for testing the plugin on it
+     */
+    register("build-run-server") {
+        onlyIf {
+            !buildTools.runServer.exists()
+        }
+
+        buildTools.runServer.mkdir()
+
+        copy {
+            from(buildTools.serverJar)
+            into(buildTools.runServerJar.parent)
+            rename {
+                "server.jar"
+            }
+        }
+    }
+
 }
 
 class BuildTools (
@@ -93,6 +113,9 @@ class BuildTools (
 ) {
     val temp = File(".build-tools")
     val file = File(temp, "build-tools.jar")
+
+    val runServer = File("run_server")
+    val runServerJar = File(runServer, "server.jar")
 
     val serverJar = if (useSpigot) {
         File(temp, "spigot-${minecraftVersion}.jar")
