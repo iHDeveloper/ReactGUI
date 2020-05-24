@@ -6,7 +6,13 @@ plugins {
 }
 
 val buildTools = BuildTools(
-        minecraftVersion = "1.8.8"
+
+        // Server Version
+        minecraftVersion = "1.8.8",
+
+        // Spigot = true
+        // Craftbukkit = false
+        useSpigot = true
 )
 
 group = "me.ihdeveloper"
@@ -37,6 +43,20 @@ tasks {
      * Download the build tools
      */
     register<Download>("download-build-tools") {
+        onlyIf {
+            !buildTools.file.exists()
+        }
+
+        val temp = buildTools.temp
+
+        // Check if the temporary folder doesn't exist
+        if (!temp.exists())
+            temp.mkdir() // Create the temporary folder
+
+        // Check if the temporary folder is file
+        if (temp.isFile)
+            error("Can't use the folder [.build-tools] because it's a file")
+
         src("https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar")
         dest(buildTools.file)
     }
@@ -45,32 +65,38 @@ tasks {
      * Run build tools to create tools for the workspace
      */
     register("run-build-tools") {
-        val temp = buildTools.temp
-        if (!temp.exists())
-            temp.mkdir()
+        dependsOn(":download-build-tools")
 
-        if (temp.isFile)
-            error("Can't use the folder [.build-tools] because it's a file")
+        onlyIf {
+            !buildTools.server.exists()
+        }
 
-        if (!buildTools.file.exists())
-            dependsOn(":download-build-tools")
-
-        javaexec {
-            workingDir = buildTools.temp
-            main = "-jar"
-            args = mutableListOf<String>(
-                    buildTools.file.absolutePath,
-                    "--rev",
-                    buildTools.minecraftVersion
-            )
+        doLast {
+            // Run the build tools to generate the server
+            javaexec {
+                workingDir = buildTools.temp
+                main = "-jar"
+                args = mutableListOf<String>(
+                        buildTools.file.absolutePath,
+                        "--rev",
+                        buildTools.minecraftVersion
+                )
+            }
         }
     }
 
 }
 
 class BuildTools (
-        val minecraftVersion: String
+        val minecraftVersion: String,
+        val useSpigot: Boolean
 ) {
     val temp = File(".build-tools")
     val file = File(temp, "build-tools.jar")
+
+    val server = if (useSpigot) {
+        File(temp, "spigot-${minecraftVersion}.jar")
+    } else {
+        File(temp, "craftbukkit-${minecraftVersion}.jar")
+    }
 }
