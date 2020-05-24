@@ -1,3 +1,6 @@
+# Build Tools
+.build-tools
+
 # Intellji Idea
 .idea/artifacts
 .idea/compiler.xml
