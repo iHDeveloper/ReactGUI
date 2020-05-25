@@ -164,28 +164,34 @@ tasks {
      * Build the run server for testing the plugin on it
      */
     register("build-run-server") {
+        dependsOn(":build-common-server")
+
         val server = buildTools.runServer
+
         onlyIf {
             !server.exists
         }
 
         server.mkdir()
 
-        copy {
-            from(buildTools.serverJar)
-            into(server.dir)
-            rename {
-                server.jar.name
+        doLast {
+            copy {
+                from(buildTools.serverJar)
+                into(server.dir)
+                rename {
+                    server.jar.name
+                }
             }
-        }
 
-        buildTools.commonServer.copyTo(server)
+            buildTools.commonServer.copyTo(server)
+        }
     }
 
     /**
      * Build the plugin for the run server
      */
     register("build-run-plugin") {
+        dependsOn("build-run-server")
         dependsOn(":shadowJar")
 
         doLast {
