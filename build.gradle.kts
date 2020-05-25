@@ -35,6 +35,11 @@ configure<JavaPluginConvention> {
 
 tasks {
 
+    getByName("clean").doLast {
+        // Delete thr run server directory
+        buildTools.runServer.deleteRecursively()
+    }
+
     /**
      *  Setup the workspace to develop the plugin
      */
