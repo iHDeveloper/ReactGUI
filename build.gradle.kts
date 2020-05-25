@@ -309,7 +309,11 @@ open class Server(
      * Delete the server
      */
     fun delete() {
+        // Delete everything including the directory itself
         dir.deleteRecursively()
+
+        // Create an empty directory for better user experience
+        dir.mkdir()
     }
 }
 
