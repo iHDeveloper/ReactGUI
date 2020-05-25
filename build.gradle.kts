@@ -50,7 +50,7 @@ tasks {
             !buildTools.file.exists()
         }
 
-        val temp = buildTools.temp
+        val temp = buildTools.buildDir
 
         // Check if the temporary folder doesn't exist
         if (!temp.exists())
@@ -77,7 +77,7 @@ tasks {
         doLast {
             // Run the build tools to generate the server
             javaexec {
-                workingDir = buildTools.temp
+                workingDir = buildTools.buildDir
                 main = "-jar"
                 args = mutableListOf<String>(
                         buildTools.file.absolutePath,
@@ -115,16 +115,16 @@ class BuildTools (
         val minecraftVersion: String,
         val useSpigot: Boolean
 ) {
-    val temp = File(".build-tools")
-    val file = File(temp, "build-tools.jar")
+    val buildDir = File(".build-tools")
+    val file = File(buildDir, "build-tools.jar")
 
     val runServer = File("run_server")
     val runServerJar = File(runServer, "server.jar")
     val runServerPlugins = File(runServer, "plugins")
 
     val serverJar = if (useSpigot) {
-        File(temp, "spigot-${minecraftVersion}.jar")
+        File(buildDir, "spigot-${minecraftVersion}.jar")
     } else {
-        File(temp, "craftbukkit-${minecraftVersion}.jar")
+        File(buildDir, "craftbukkit-${minecraftVersion}.jar")
     }
 }
