@@ -113,51 +113,55 @@ tasks {
 
         server.mkdir()
 
-        // Print the EULA to the user
-        printEULA()
+        doLast {
+            // Print the EULA to the user
+            printEULA()
 
-        // Wait for 10 seconds to realise the message
-        try {
-            Thread.sleep(10 * 1000)
-        } catch (e: Exception) {}
+            // Wait for 10 seconds to realise the message
+            try {
+                Thread.sleep(10 * 1000)
+            } catch (e: Exception) {}
 
-        // Since the process didn't stop
-        // This means the user indicates to agree on the EULA
-        // And this code automates the indicates process
-        val eula = server.eula
-        if (eula.exists()) {
-            var text = eula.readText()
-            text = text.replace("eula=false", "eula=true", true)
-            eula.writeText(text)
-        } else {
-            eula.writeText("eula=true")
-        }
-
-
-        copy {
-            from(buildTools.serverJar)
-            into(server.dir)
-            rename {
-                "server.jar"
+            // Since the process didn't stop
+            // This means the user indicates to agree on the EULA
+            // And this code automates the indicates process
+            val eula = server.eula
+            if (eula.exists()) {
+                var text = eula.readText()
+                text = text.replace("eula=false", "eula=true", true)
+                eula.writeText(text)
+            } else {
+                eula.writeText("eula=true")
             }
+
+
+            copy {
+                from(buildTools.serverJar)
+                into(server.dir)
+                rename {
+                    "server.jar"
+                }
+            }
+
+            // Sends "stop" command to the common server to stop after initialising
+            val stopCommand = "stop"
+            val input = ByteArrayInputStream(stopCommand.toByteArray(StandardCharsets.UTF_8))
+
+            javaexec {
+                standardInput = input
+                workingDir = server.dir
+                main = "-jar"
+                args = mutableListOf<String>(
+                        server.jar.absolutePath
+                )
+            }
+
+            input.close()
+
+            server.jar.delete()
+
+            server.build()
         }
-
-        // Sends "stop" command to the common server to stop after initialising
-        val stopCommand = "stop"
-        val input = ByteArrayInputStream(stopCommand.toByteArray(StandardCharsets.UTF_8))
-
-        javaexec {
-            standardInput = input
-            workingDir = server.dir
-            main = "-jar"
-            args = mutableListOf<String>(
-                    server.jar.absolutePath
-            )
-        }
-
-        input.close()
-
-        server.jar.delete()
     }
 
     /**
@@ -314,7 +318,7 @@ open class Server(
     /**
      * Delete the server
      */
-    fun delete() {
+    open fun delete() {
         // Delete everything including the directory itself
         dir.deleteRecursively()
 
@@ -337,10 +341,24 @@ class CommonServer (
      */
     val eula = File(dir, "eula.txt")
 
+    /**
+     * A file to detect if we are ready to copy or not
+     */
+    private val cache = File(dir.parent, ".build-cache")
+
     override val exists: Boolean
         get() {
-            return eula.exists() and dir.exists() and plugins.exists()
+            return dir.exists() and plugins.exists() and eula.exists() and cache.exists()
         }
+
+    /**
+     * Build cache file to know that we built before
+     *
+     * If the file doesn't exist then we will build the common server again
+     */
+    fun build() {
+        cache.createNewFile()
+    }
 
     /**
      * Copy the server contents into a target server
@@ -354,6 +372,12 @@ class CommonServer (
         )
     }
 
+    override fun delete() {
+        super.delete()
+
+        // Delete the cache file because the contents no longer exists
+        cache.delete()
+    }
 }
 
 /**
