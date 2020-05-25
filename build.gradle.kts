@@ -179,6 +179,8 @@ tasks {
                 "server.jar"
             }
         }
+
+        copyFromCommon(buildTools.runServerDir)
     }
 
     /**
@@ -234,6 +236,13 @@ fun printEULA() {
 
     // Separate the EULA for more attention
     logger.lifecycle("")
+}
+
+fun copyFromCommon(target: File) {
+    buildTools.commonServerDir.copyRecursively(
+            target = target,
+            overwrite = false
+    )
 }
 
 class BuildTools (
