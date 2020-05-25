@@ -39,8 +39,8 @@ configure<JavaPluginConvention> {
 tasks {
 
     getByName("clean").doLast {
-        // Delete the run server directory
-        buildTools.runServer.delete()
+        // Delete the production server directory
+        buildTools.productionServer.delete()
 
         // Delete the common server directory
         buildTools.commonServer.delete()
@@ -50,7 +50,7 @@ tasks {
      *  Setup the workspace to develop the plugin
      */
     register("setup") {
-        dependsOn(":build-run-plugin")
+        dependsOn(":build-production-plugin")
     }
 
     /**
@@ -165,12 +165,12 @@ tasks {
     }
 
     /**
-     * Build the run server for testing the plugin on it
+     * Build the production server for testing the plugin on it
      */
-    register("build-run-server") {
+    register("build-production-server") {
         dependsOn(":build-common-server")
 
-        val server = buildTools.runServer
+        val server = buildTools.productionServer
 
         onlyIf {
             !server.exists
@@ -192,16 +192,16 @@ tasks {
     }
 
     /**
-     * Build the plugin for the run server
+     * Build the production plugin for the production server
      */
-    register("build-run-plugin") {
-        dependsOn("build-run-server")
+    register("build-production-plugin") {
+        dependsOn("build-production-server")
         dependsOn(":shadowJar")
 
         doLast {
             copy {
                 from(buildTools.libsDir)
-                into(buildTools.runServer.plugins)
+                into(buildTools.productionServer.plugins)
                 rename {
                     buildTools.pluginJarName
                 }
@@ -263,7 +263,7 @@ class BuildTools (
     }
 
     val commonServer = CommonServer(serversDir)
-    val runServer = RunServer(serversDir)
+    val productionServer = ProductionServer(serversDir)
 
     val pluginJarName: String
         get() {
@@ -383,6 +383,6 @@ class CommonServer (
 /**
  * A similar server environment for testing the plugin
  */
-class RunServer (
+class ProductionServer (
         parent: File
-) : Server(parent, "run")
+) : Server(parent, "prod")
