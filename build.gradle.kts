@@ -3,6 +3,7 @@ import de.undercouch.gradle.tasks.download.Download
 plugins {
     java
     id ("de.undercouch.download") version "4.0.4"
+    id ("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 val buildTools = BuildTools(
@@ -109,6 +110,23 @@ tasks {
         }
     }
 
+    /**
+     * Build the plugin for the run server
+     */
+    register("build-run-plugin") {
+        dependsOn(":shadowJar")
+
+        doLast {
+            copy {
+                from(buildTools.libsDir)
+                into(buildTools.runServerPlugins)
+                rename {
+                    buildTools.pluginJarName
+                }
+            }
+        }
+    }
+
 }
 
 class BuildTools (
@@ -118,9 +136,16 @@ class BuildTools (
     val buildDir = File(".build-tools")
     val file = File(buildDir, "build-tools.jar")
 
+    val libsDir = File("build/libs/")
+
     val runServer = File("run_server")
     val runServerJar = File(runServer, "server.jar")
     val runServerPlugins = File(runServer, "plugins")
+
+    val pluginJarName: String
+        get() {
+            return "${rootProject.name}.jar"
+        }
 
     val serverJar = if (useSpigot) {
         File(buildDir, "spigot-${minecraftVersion}.jar")
