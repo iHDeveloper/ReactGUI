@@ -37,7 +37,7 @@ tasks {
 
     getByName("clean").doLast {
         // Delete thr run server directory
-        buildTools.runServer.deleteRecursively()
+        buildTools.runServerDir.deleteRecursively()
     }
 
     /**
@@ -99,11 +99,11 @@ tasks {
      */
     register("build-run-server") {
         onlyIf {
-            !buildTools.runServer.exists()
+            !buildTools.runServerDir.exists()
             !buildTools.runServerPlugins.exists()
         }
 
-        buildTools.runServer.mkdir()
+        buildTools.runServerDir.mkdir()
         buildTools.runServerPlugins.mkdir()
 
         copy {
@@ -143,9 +143,9 @@ class BuildTools (
 
     val libsDir = File("build/libs/")
 
-    val runServer = File("run_server")
-    val runServerJar = File(runServer, "server.jar")
-    val runServerPlugins = File(runServer, "plugins")
+    val runServerDir = File("run_server")
+    val runServerJar = File(runServerDir, "server.jar")
+    val runServerPlugins = File(runServerDir, "plugins")
 
     val pluginJarName: String
         get() {
