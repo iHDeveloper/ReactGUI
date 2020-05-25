@@ -233,9 +233,7 @@ fun printEULA() {
     }
 
     // Separate the EULA for more attention
-    for (i in 1..3) {
-        logger.lifecycle("")
-    }
+    logger.lifecycle("")
 }
 
 class BuildTools (
