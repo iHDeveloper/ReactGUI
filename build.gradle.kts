@@ -94,9 +94,11 @@ tasks {
     register("build-run-server") {
         onlyIf {
             !buildTools.runServer.exists()
+            !buildTools.runServerPlugins.exists()
         }
 
         buildTools.runServer.mkdir()
+        buildTools.runServerPlugins.mkdir()
 
         copy {
             from(buildTools.serverJar)
@@ -118,6 +120,7 @@ class BuildTools (
 
     val runServer = File("run_server")
     val runServerJar = File(runServer, "server.jar")
+    val runServerPlugins = File(runServer, "plugins")
 
     val serverJar = if (useSpigot) {
         File(temp, "spigot-${minecraftVersion}.jar")
