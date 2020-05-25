@@ -29,7 +29,7 @@ repositories {
 dependencies {
     compileOnly(files(buildTools.serverJar.absolutePath))
 
-    testCompile("junit", "junit", "4.12")
+    testCompileOnly("junit", "junit", "4.12")
 }
 
 configure<JavaPluginConvention> {
@@ -114,14 +114,6 @@ tasks {
         buildTools.commonServerDir.mkdir()
         buildTools.commonServerPlugins.mkdir()
 
-        if (buildTools.commonServerEULA.exists()) {
-            var text = buildTools.commonServerEULA.readText()
-            text = text.replace("eula=false", "eula=true", true)
-            buildTools.commonServerEULA.writeText(text)
-        } else {
-            buildTools.commonServerEULA.writeText("eula=true")
-        }
-
         // Print the EULA to the user
         printEULA()
 
@@ -129,6 +121,17 @@ tasks {
         try {
             Thread.sleep(10 * 1000)
         } catch (e: Exception) {}
+
+        // Since the process didn't stop
+        // This means the user indicates to agree on the EULA
+        // And this code automates the indicates process
+        if (buildTools.commonServerEULA.exists()) {
+            var text = buildTools.commonServerEULA.readText()
+            text = text.replace("eula=false", "eula=true", true)
+            buildTools.commonServerEULA.writeText(text)
+        } else {
+            buildTools.commonServerEULA.writeText("eula=true")
+        }
 
 
         copy {
