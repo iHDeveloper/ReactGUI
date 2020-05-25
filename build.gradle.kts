@@ -53,6 +53,7 @@ tasks {
         dependsOn(":run-build-tools")
         dependsOn(":build-common-server")
         dependsOn(":build-run-server")
+        dependsOn(":build-run-plugin")
     }
 
     /**
