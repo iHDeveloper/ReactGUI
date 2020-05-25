@@ -1,6 +1,5 @@
 # Servers
-run_server
-common_server
+server
 
 # Build Tools
 .build-tools

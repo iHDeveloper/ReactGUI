@@ -245,8 +245,14 @@ class BuildTools (
 
     val libsDir = File("build/libs/")
 
-    val commonServer = CommonServer()
-    val runServer = RunServer()
+    private val serversDir = File("server")
+
+    init {
+        serversDir.mkdir()
+    }
+
+    val commonServer = CommonServer(serversDir)
+    val runServer = RunServer(serversDir)
 
     val pluginJarName: String
         get() {
@@ -264,12 +270,13 @@ class BuildTools (
  * Help making the server and structuring it
  */
 open class Server(
-    name: String
+        parent: File,
+        name: String
 ) {
     /**
      * Directory of the server
      */
-    val dir = File(name)
+    val dir = File(parent, name)
 
     /**
      * Plugins of the sever
@@ -310,7 +317,9 @@ open class Server(
  *
  * Any change should be on this environment instead of the other environments ( aka servers )
  */
-class CommonServer : Server("common_Server") {
+class CommonServer (
+        parent: File
+) : Server(parent, "common") {
 
     /**
      * The Minecraft's EULA file
@@ -339,4 +348,6 @@ class CommonServer : Server("common_Server") {
 /**
  * A similar server environment for testing the plugin
  */
-class RunServer : Server("run_server")
+class RunServer (
+        parent: File
+) : Server(parent, "run")
