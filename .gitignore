@@ -1,8 +1,11 @@
+# Servers
+run_server
+
 # Build Tools
 .build-tools
 
 # Intellji Idea
-.idea/
+.idea
 *.iml
 *.ipr
 
