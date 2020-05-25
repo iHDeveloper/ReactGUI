@@ -50,9 +50,6 @@ tasks {
      *  Setup the workspace to develop the plugin
      */
     register("setup") {
-        dependsOn(":run-build-tools")
-        dependsOn(":build-common-server")
-        dependsOn(":build-run-server")
         dependsOn(":build-run-plugin")
     }
 
@@ -106,7 +103,10 @@ tasks {
      * Build the common server to be copied from later
      */
     register("build-common-server") {
+        dependsOn(":run-build-tools")
+
         val server = buildTools.commonServer
+
         onlyIf {
             !server.exists
         }
