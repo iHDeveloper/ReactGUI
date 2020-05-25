@@ -209,6 +209,26 @@ tasks {
         }
     }
 
+    /**
+     * Run the production server with the production plugin on it
+     */
+    register("run") {
+        dependsOn(":build-production-plugin")
+
+        doLast {
+            val server = buildTools.productionServer
+
+            javaexec {
+                standardInput = System.`in`
+                workingDir = server.dir
+                main = "-jar"
+                args = mutableListOf(
+                        server.jar.absolutePath
+                )
+            }
+        }
+    }
+
 }
 
 /**
