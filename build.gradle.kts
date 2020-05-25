@@ -204,7 +204,7 @@ tasks {
  * Print to the user that using the kit indicates that his/her agreement to Minecraft's EULA
  */
 fun printEULA() {
-    val eulaInfo = mutableListOf<String>(
+    val eulaInfo = mutableListOf(
             " _____________________________________________________________________________________",
             "|  _________________________________________________________________________________  |",
             "| |                                                                                 | |",
@@ -264,7 +264,7 @@ class BuildTools (
  * Help making the server and structuring it
  */
 open class Server(
-    private val name: String
+    name: String
 ) {
     /**
      * Directory of the server
@@ -339,5 +339,4 @@ class CommonServer : Server("common_Server") {
 /**
  * A similar server environment for testing the plugin
  */
-class RunServer : Server("run_server") {
-}
+class RunServer : Server("run_server")
