@@ -310,6 +310,44 @@ tasks {
         }
     }
 
+    /**
+     * Build a plugin that special for debugging process and it's not useful in any production environment
+     */
+    register("build-debug-plugin") {
+        dependsOn(":build-debug-server")
+        dependsOn(":jar")
+
+        // Debug mode is already enabled in :build-debug-server
+
+        doLast {
+
+            // Copy the plugin to the debug plugins folder
+            copy {
+                from(buildTools.libsDir)
+                into(buildTools.debugServer.plugins)
+                rename {
+                    buildTools.pluginJarName
+                }
+            }
+        }
+    }
+
+    // Overwrite jar task so that when debug is enabled we can create the plugin jar for debugging
+    jar {
+        doFirst {
+            if (buildTools.debug) {
+                // Include anything else
+                include("*.*")
+
+                // Exclude any class file because they exist in the debug server jar
+                exclude("*.class")
+
+                // Include the main class only because we need it for the plugin load process
+                include(buildTools.pluginMainClassFile)
+            }
+        }
+    }
+
 }
 
 /**
