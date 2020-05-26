@@ -1,13 +1,19 @@
+import java.io.ByteArrayInputStream
+import java.io.FileInputStream
+import java.nio.charset.StandardCharsets
+
 import de.undercouch.gradle.tasks.download.Download
 
-import java.io.ByteArrayInputStream
-import java.nio.charset.StandardCharsets
+import org.yaml.snakeyaml.Yaml
 
 plugins {
     java
     id ("de.undercouch.download") version "4.0.4"
     id ("com.github.johnrengelman.shadow") version "5.2.0"
 }
+
+group = "me.ihdeveloper"
+version = "0.1"
 
 val buildTools = BuildTools(
 
@@ -16,20 +22,33 @@ val buildTools = BuildTools(
 
         // Spigot = true
         // Craftbukkit = false
-        useSpigot = true
-)
+        useSpigot = true,
 
-group = "me.ihdeveloper"
-version = "0.1"
+        // The gradle class of the kit
+        gradleStart = "${group}.spigot.starterkit.GradleStart"
+)
 
 repositories {
     mavenCentral()
 }
 
+val serverJarConfig: Configuration by configurations.creating
+
 dependencies {
-    compileOnly(files(buildTools.serverJar.absolutePath))
+    // Include the server jar source
+    serverJarConfig(files(buildTools.serverJar.absolutePath))
+    compileOnly(serverJarConfig)
 
     testCompileOnly("junit", "junit", "4.12")
+}
+
+buildscript {
+
+    dependencies {
+        // For reading the Main class in plugin.yml
+        classpath("org.yaml", "snakeyaml", "1.26")
+    }
+
 }
 
 configure<JavaPluginConvention> {
@@ -170,6 +189,8 @@ tasks {
     register("build-production-server") {
         dependsOn(":build-common-server")
 
+        buildTools.debug = false
+
         val server = buildTools.productionServer
 
         onlyIf {
@@ -229,6 +250,66 @@ tasks {
         }
     }
 
+    /**
+     * Build the debug server to enable the debugging feature
+     */
+    register("build-debug-server") {
+        dependsOn(":build-common-server")
+
+        // Enable debug for overwriting shadowJar
+        buildTools.debug = true
+
+        dependsOn(":shadowJar")
+
+        val server = buildTools.debugServer
+
+        server.mkdir()
+
+        doLast {
+
+            // Copy the common server contents into debug server
+            buildTools.commonServer.copyTo(server)
+
+            // Copy the compiled jar with server jar source + plugin source
+            copy {
+                from(buildTools.libsDir)
+                into(server.dir)
+                rename {
+                    server.jar.name
+                }
+            }
+        }
+
+    }
+
+    // Overwrite the shadow jar when the debug is enabled for writing server jar with plugin source
+    // So, we can intercept it easily
+    shadowJar {
+        doFirst {
+            if (buildTools.debug) {
+
+                // Include the server jar source
+                configurations.add(serverJarConfig)
+
+                manifest {
+
+                    // Points the start point to be at gradle start
+                    attributes["Main-Class"] = buildTools.gradleStartClass
+                }
+
+                // Include everything
+                include("**")
+
+                // Exclude the main class
+                exclude(buildTools.pluginMainClassFile)
+            } else {
+
+                // Exclude gradle start from the production plugin
+                exclude("${buildTools.gradleStartClass}.class")
+            }
+        }
+    }
+
 }
 
 /**
@@ -269,12 +350,17 @@ fun printEULA() {
 
 class BuildTools (
         val minecraftVersion: String,
-        val useSpigot: Boolean
+        val useSpigot: Boolean,
+        gradleStart: String
 ) {
+    var debug = false
+
     val buildDir = File(".build-tools")
     val file = File(buildDir, "build-tools.jar")
 
     val libsDir = File("build/libs/")
+
+    val pluginConfig = File("src/main/resources/plugin.yml")
 
     private val serversDir = File("server")
 
@@ -284,17 +370,40 @@ class BuildTools (
 
     val commonServer = CommonServer(serversDir)
     val productionServer = ProductionServer(serversDir)
+    val debugServer = DebugServer(serversDir)
 
     val pluginJarName: String
         get() {
             return "${rootProject.name}.jar"
         }
 
+    var gradleStartClass: String
+
+    init {
+        gradleStartClass = gradleStart
+        while(gradleStartClass.contains(".")) {
+            gradleStartClass = gradleStartClass.replace(".", "/")
+        }
+    }
+
     val serverJar = if (useSpigot) {
         File(buildDir, "spigot-${minecraftVersion}.jar")
     } else {
         File(buildDir, "craftbukkit-${minecraftVersion}.jar")
     }
+
+    val pluginMainClassFile: String
+        get() {
+            val configFile = buildTools.pluginConfig
+            val yaml = Yaml()
+            val data = yaml.load(FileInputStream(configFile)) as Map<String, Any>
+            var mainClass = data["main"] as String
+            while (mainClass.contains(".")) {
+                mainClass = mainClass.replace(".", "/")
+            }
+            mainClass = "${mainClass}.class"
+            return mainClass
+        }
 }
 
 /**
@@ -406,3 +515,10 @@ class CommonServer (
 class ProductionServer (
         parent: File
 ) : Server(parent, "prod")
+
+/**
+ * An environment that offers the debugging feature to the plugin developer
+ */
+class DebugServer (
+        parent: File
+) : Server(parent, "debug")
