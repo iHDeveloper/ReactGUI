@@ -192,7 +192,7 @@ tasks {
     register("build-production-server") {
         dependsOn(":build-common-server")
 
-        buildTools.debug = false
+        buildTools.debugServer.enabled = false
 
         val server = buildTools.productionServer
 
@@ -259,12 +259,12 @@ tasks {
     register("build-debug-server") {
         dependsOn(":build-common-server")
 
+        val server = buildTools.debugServer
+
         // Enable debug for overwriting shadowJar
-        buildTools.debug = true
+        server.enabled = true
 
         dependsOn(":shadowJar")
-
-        val server = buildTools.debugServer
 
         server.mkdir()
 
@@ -292,7 +292,7 @@ tasks {
         archiveFileName.set(fileName)
 
         doFirst {
-            if (buildTools.debug) {
+            if (buildTools.debugServer.enabled) {
 
                 // Include the server jar source
                 configurations.add(serverJarConfig)
@@ -341,7 +341,7 @@ tasks {
     // Overwrite jar task so that when debug is enabled we can create the plugin jar for debugging
     jar {
         doFirst {
-            if (buildTools.debug) {
+            if (buildTools.debugServer.enabled) {
                 // Include anything else
                 include("*.*")
 
@@ -397,8 +397,6 @@ class BuildTools (
         val useSpigot: Boolean,
         gradleStart: String
 ) {
-    var debug = false
-
     val buildDir = File(".build-tools")
     val file = File(buildDir, "build-tools.jar")
 
@@ -565,4 +563,8 @@ class ProductionServer (
  */
 class DebugServer (
         parent: File
-) : Server(parent, "debug")
+) : Server(parent, "debug") {
+
+    var enabled = false
+
+}
