@@ -69,6 +69,21 @@ tasks {
     }
 
     /**
+     * Overwrite the build task to put the compiled jar into the build folder instead of build/libs
+     */
+    build {
+        dependsOn(":shadowJar")
+
+        doLast {
+            copy {
+                val libsDir = buildTools.libsDir
+                from(libsDir)
+                into(libsDir.parent)
+            }
+        }
+    }
+
+    /**
      *  Setup the workspace to develop the plugin
      */
     register("setup") {
