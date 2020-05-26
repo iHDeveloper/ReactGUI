@@ -1,4 +1,4 @@
-name: spigot-starter-plugin
+name: example-plugin
 version: 0.1
 author: iHDeveloper
-main: me.ihdeveloper.spigot.starterkit.Main
+main: com.example.plugin.Main

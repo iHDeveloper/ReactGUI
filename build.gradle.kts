@@ -25,7 +25,7 @@ val buildTools = BuildTools(
         useSpigot = true,
 
         // The gradle class of the kit
-        gradleStart = "${group}.spigot.starterkit.GradleStart"
+        gradleStart = "com.example.plugin.GradleStart"
 )
 
 repositories {

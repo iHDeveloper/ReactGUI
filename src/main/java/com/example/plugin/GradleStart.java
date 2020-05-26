@@ -1,4 +1,4 @@
-package me.ihdeveloper.spigot.starterkit;
+package com.example.plugin;
 
 public final class GradleStart {
 
