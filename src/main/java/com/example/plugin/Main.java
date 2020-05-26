@@ -6,12 +6,12 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("Spigot starter kit enabled!");
+        getLogger().info("Example plugin enabled!");
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("Spigot starter kit disabled!");
+        getLogger().info("Example plugin disabled!");
     }
 
 }
