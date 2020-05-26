@@ -1,10 +1,8 @@
+import de.undercouch.gradle.tasks.download.Download
+import org.yaml.snakeyaml.Yaml
 import java.io.ByteArrayInputStream
 import java.io.FileInputStream
 import java.nio.charset.StandardCharsets
-
-import de.undercouch.gradle.tasks.download.Download
-
-import org.yaml.snakeyaml.Yaml
 
 plugins {
     java
@@ -259,6 +257,10 @@ tasks {
         doLast {
             val server = buildTools.productionServer
 
+            printIntro()
+            logger.lifecycle("> Starting the production server...")
+            logger.lifecycle("")
+
             javaexec {
                 standardInput = System.`in`
                 workingDir = server.dir
@@ -380,6 +382,8 @@ tasks {
         doLast {
             val server = buildTools.debugServer
 
+            printIntro()
+
             javaexec {
                 standardInput = System.`in`
                 workingDir = server.dir
@@ -427,6 +431,25 @@ fun printEULA() {
 
     // Separate the EULA for more attention
     logger.lifecycle("")
+}
+
+fun printIntro() {
+    val intro = arrayOf(
+            """=================================""",
+            """   _____       _             __  """,
+            """  / ___/____  (_)___ _____  / /_ """,
+            """  \__ \/ __ \/ / __ `/ __ \/ __/ """,
+            """  ___/ / /_/ / / /_/ / /_/ / /_  """,
+            """/____/ .___/_/\__, /\____/\__/   """,
+            """    /_/      /____/              """,
+            """                                 """,
+            """    [#] Spigot Starter Kit [#]   """,
+            """        By: @iHDeveloper         """,
+            """================================="""
+    )
+    for (line in intro) {
+        logger.lifecycle(line)
+    }
 }
 
 class BuildTools (
