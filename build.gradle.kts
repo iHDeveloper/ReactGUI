@@ -288,6 +288,9 @@ tasks {
     // Overwrite the shadow jar when the debug is enabled for writing server jar with plugin source
     // So, we can intercept it easily
     shadowJar {
+        val fileName = "${archiveBaseName.get()}-${archiveVersion.get()}.${archiveExtension.get()}"
+        archiveFileName.set(fileName)
+
         doFirst {
             if (buildTools.debug) {
 
