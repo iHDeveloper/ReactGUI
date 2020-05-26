@@ -439,7 +439,7 @@ class BuildTools (
 
     val libsDir = File("build/libs/")
 
-    val pluginConfig = File("src/main/resources/plugin.yml")
+    private val pluginConfig = File("src/main/resources/plugin.yml")
 
     private val serversDir = File("server")
 
