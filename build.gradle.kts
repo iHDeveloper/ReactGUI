@@ -61,6 +61,9 @@ tasks {
         // Delete the production server directory
         buildTools.productionServer.delete()
 
+        // Delete the debug sever directory
+        buildTools.debugServer.delete()
+
         // Delete the common server directory
         buildTools.commonServer.delete()
     }
