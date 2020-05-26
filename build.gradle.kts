@@ -356,6 +356,26 @@ tasks {
         }
     }
 
+    /**
+     * Run the debug server with debug version of the plugin
+     */
+    register("debug") {
+        dependsOn(":build-debug-plugin")
+
+        doLast {
+            val server = buildTools.debugServer
+
+            javaexec {
+                standardInput = System.`in`
+                workingDir = server.dir
+                main = "-jar"
+                args = mutableListOf(
+                        server.jar.absolutePath
+                )
+            }
+        }
+    }
+
 }
 
 /**
