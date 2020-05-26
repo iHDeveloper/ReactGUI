@@ -72,6 +72,8 @@ tasks {
      *  Setup the workspace to develop the plugin
      */
     register("setup") {
+
+        // Build the production plugin to be able to test it
         dependsOn(":build-production-plugin")
     }
 

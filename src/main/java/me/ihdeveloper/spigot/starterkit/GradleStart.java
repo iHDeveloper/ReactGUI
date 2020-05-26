@@ -16,7 +16,7 @@ public final class GradleStart {
             System.out.println(line);
         }
         System.out.println("> Spigot Starter Kit - By @iHDeveloper");
-        System.out.println("> Starting debugging...");
+        System.out.println("> Debug server is starting...");
         System.out.println();
         org.bukkit.craftbukkit.Main.main(args);
     }
