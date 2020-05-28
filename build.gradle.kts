@@ -1,7 +1,5 @@
 import de.undercouch.gradle.tasks.download.Download
-import org.yaml.snakeyaml.Yaml
 import java.io.ByteArrayInputStream
-import java.io.FileInputStream
 import java.nio.charset.StandardCharsets
 
 plugins {
@@ -20,10 +18,7 @@ val buildTools = BuildTools(
 
         // Spigot = true
         // Craftbukkit = false
-        useSpigot = true,
-
-        // The gradle class of the kit
-        gradleStart = "com.example.plugin.GradleStart"
+        useSpigot = true
 )
 
 repositories {
@@ -56,14 +51,8 @@ configure<JavaPluginConvention> {
 tasks {
 
     getByName("clean").doLast {
-        // Delete the production server directory
-        buildTools.productionServer.delete()
-
-        // Delete the debug sever directory
-        buildTools.debugServer.delete()
-
-        // Delete the common server directory
-        buildTools.commonServer.delete()
+        // Delete the server folder
+        buildTools.server.delete()
     }
 
     /**
@@ -72,6 +61,7 @@ tasks {
     build {
         dependsOn(":shadowJar")
 
+        // Copy the compiled plugin jar from build/libs to build/
         doLast {
             copy {
                 val libsDir = buildTools.libsDir
@@ -137,12 +127,12 @@ tasks {
     }
 
     /**
-     * Build the common server to be copied from later
+     * Build the server to test the plugin on it
      */
-    register("build-common-server") {
+    register("build-server") {
         dependsOn(":run-build-tools")
 
-        val server = buildTools.commonServer
+        val server = buildTools.server
 
         onlyIf {
             !server.exists
@@ -172,6 +162,7 @@ tasks {
             }
 
 
+            // Copy the selected compiled server jar to the server folder
             copy {
                 from(buildTools.serverJar)
                 into(server.dir)
@@ -184,6 +175,7 @@ tasks {
             val stopCommand = "stop"
             val input = ByteArrayInputStream(stopCommand.toByteArray(StandardCharsets.UTF_8))
 
+            // Run the server to initialise everything and then it executes the command "stop" to stop itself after getting the environment ready
             javaexec {
                 standardInput = input
                 workingDir = server.dir
@@ -193,54 +185,22 @@ tasks {
                 )
             }
 
+            // Close the input after the termination of the server
             input.close()
-
-            server.jar.delete()
-
-            server.build()
-        }
-    }
-
-    /**
-     * Build the production server for testing the plugin on it
-     */
-    register("build-production-server") {
-        dependsOn(":build-common-server")
-
-        buildTools.debugServer.enabled = false
-
-        val server = buildTools.productionServer
-
-        onlyIf {
-            !server.exists
-        }
-
-        server.mkdir()
-
-        doLast {
-            copy {
-                from(buildTools.serverJar)
-                into(server.dir)
-                rename {
-                    server.jar.name
-                }
-            }
-
-            buildTools.commonServer.copyTo(server)
         }
     }
 
     /**
      * Build the production plugin for the production server
      */
-    register("build-production-plugin") {
-        dependsOn("build-production-server")
+    register("build-plugin") {
+        dependsOn("build-server")
         dependsOn(":shadowJar")
 
         doLast {
             copy {
                 from(buildTools.libsDir)
-                into(buildTools.productionServer.plugins)
+                into(buildTools.server.plugins)
                 rename {
                     buildTools.pluginJarName
                 }
@@ -252,137 +212,14 @@ tasks {
      * Run the production server with the production plugin on it
      */
     register("run") {
-        dependsOn(":build-production-plugin")
+        dependsOn(":build-plugin")
 
         doLast {
-            val server = buildTools.productionServer
+            val server = buildTools.server
 
             printIntro()
             logger.lifecycle("> Starting the production server...")
             logger.lifecycle("")
-
-            javaexec {
-                standardInput = System.`in`
-                workingDir = server.dir
-                main = "-jar"
-                args = mutableListOf(
-                        server.jar.absolutePath
-                )
-            }
-        }
-    }
-
-    /**
-     * Build the debug server to enable the debugging feature
-     */
-    register("build-debug-server") {
-        dependsOn(":build-common-server")
-
-        val server = buildTools.debugServer
-
-        // Enable debug for overwriting shadowJar
-        server.enabled = true
-
-        dependsOn(":shadowJar")
-
-        server.mkdir()
-
-        doLast {
-
-            // Copy the common server contents into debug server
-            buildTools.commonServer.copyTo(server)
-
-            // Copy the compiled jar with server jar source + plugin source
-            copy {
-                from(buildTools.libsDir)
-                into(server.dir)
-                rename {
-                    server.jar.name
-                }
-            }
-        }
-
-    }
-
-    // Overwrite the shadow jar when the debug is enabled for writing server jar with plugin source
-    // So, we can intercept it easily
-    shadowJar {
-        val fileName = "${archiveBaseName.get()}-${archiveVersion.get()}.${archiveExtension.get()}"
-        archiveFileName.set(fileName)
-
-        doFirst {
-            if (buildTools.debugServer.enabled) {
-
-                // Include the server jar source
-                configurations.add(serverJarConfig)
-
-                manifest {
-
-                    // Points the start point to be at gradle start
-                    attributes["Main-Class"] = buildTools.gradleStartClass
-                }
-
-                // Include everything
-                include("**")
-
-                // Exclude the main class
-                exclude(buildTools.pluginMainClassFile)
-            } else {
-
-                // Exclude gradle start from the production plugin
-                exclude("${buildTools.gradleStartClass}.class")
-            }
-        }
-    }
-
-    /**
-     * Build a plugin that special for debugging process and it's not useful in any production environment
-     */
-    register("build-debug-plugin") {
-        dependsOn(":build-debug-server")
-        dependsOn(":jar")
-
-        // Debug mode is already enabled in :build-debug-server
-
-        doLast {
-
-            // Copy the plugin to the debug plugins folder
-            copy {
-                from(buildTools.libsDir)
-                into(buildTools.debugServer.plugins)
-                rename {
-                    buildTools.pluginJarName
-                }
-            }
-        }
-    }
-
-    // Overwrite jar task so that when debug is enabled we can create the plugin jar for debugging
-    jar {
-        doFirst {
-            if (buildTools.debugServer.enabled) {
-                // Include anything else
-                include("*.*")
-
-                // Exclude any class file because they exist in the debug server jar
-                exclude("*.class")
-
-                // Include the main class only because we need it for the plugin load process
-                include(buildTools.pluginMainClassFile)
-            }
-        }
-    }
-
-    /**
-     * Run the debug server with debug version of the plugin
-     */
-    register("debug") {
-        dependsOn(":build-debug-plugin")
-
-        doLast {
-            val server = buildTools.debugServer
-
-            printIntro()
 
             javaexec {
                 standardInput = System.`in`
@@ -454,8 +291,7 @@ fun printIntro() {
 
 class BuildTools (
         val minecraftVersion: String,
-        val useSpigot: Boolean,
-        gradleStart: String
+        val useSpigot: Boolean
 ) {
     val buildDir = File(".build-tools")
     val file = File(buildDir, "build-tools.jar")
@@ -470,55 +306,28 @@ class BuildTools (
         serversDir.mkdir()
     }
 
-    val commonServer = CommonServer(serversDir)
-    val productionServer = ProductionServer(serversDir)
-    val debugServer = DebugServer(serversDir)
+    val server = Server()
 
     val pluginJarName: String
         get() {
             return "${rootProject.name}.jar"
         }
 
-    var gradleStartClass: String
-
-    init {
-        gradleStartClass = gradleStart
-        while(gradleStartClass.contains(".")) {
-            gradleStartClass = gradleStartClass.replace(".", "/")
-        }
-    }
-
     val serverJar = if (useSpigot) {
         File(buildDir, "spigot-${minecraftVersion}.jar")
     } else {
         File(buildDir, "craftbukkit-${minecraftVersion}.jar")
     }
-
-    val pluginMainClassFile: String
-        get() {
-            val configFile = buildTools.pluginConfig
-            val yaml = Yaml()
-            val data = yaml.load(FileInputStream(configFile)) as Map<String, Any>
-            var mainClass = data["main"] as String
-            while (mainClass.contains(".")) {
-                mainClass = mainClass.replace(".", "/")
-            }
-            mainClass = "${mainClass}.class"
-            return mainClass
-        }
 }
 
 /**
  * Help making the server and structuring it
  */
-open class Server(
-        parent: File,
-        name: String
-) {
+open class Server {
     /**
      * Directory of the server
      */
-    val dir = File(parent, name)
+    val dir = File("server")
 
     /**
      * Plugins of the sever
@@ -531,11 +340,16 @@ open class Server(
     val jar = File(dir, "server.jar")
 
     /**
+     * Minecraft's EULA file
+     */
+    val eula = File(dir, "eula.txt")
+
+    /**
      * Does the server exist in the right way
      */
     open val exists: Boolean
         get() {
-            return dir.exists() and plugins.exists() and jar.exists()
+            return dir.exists() and plugins.exists() and jar.exists() and eula.exists()
         }
 
     /**
@@ -556,75 +370,4 @@ open class Server(
         // Create an empty directory for better user experience
         dir.mkdir()
     }
-}
-
-/**
- * A common server environment that its contents are replicated to the other servers
- *
- * Any change should be on this environment instead of the other environments ( aka servers )
- */
-class CommonServer (
-        parent: File
-) : Server(parent, "common") {
-
-    /**
-     * The Minecraft's EULA file
-     */
-    val eula = File(dir, "eula.txt")
-
-    /**
-     * A file to detect if we are ready to copy or not
-     */
-    private val cache = File(dir.parent, ".build-cache")
-
-    override val exists: Boolean
-        get() {
-            return dir.exists() and plugins.exists() and eula.exists() and cache.exists()
-        }
-
-    /**
-     * Build cache file to know that we built before
-     *
-     * If the file doesn't exist then we will build the common server again
-     */
-    fun build() {
-        cache.createNewFile()
-    }
-
-    /**
-     * Copy the server contents into a target server
-     *
-     * It overwrites the contents of the target server
-     */
-    fun copyTo(target: Server) {
-        dir.copyRecursively(
-                target = target.dir,
-                overwrite = true
-        )
-    }
-
-    override fun delete() {
-        super.delete()
-
-        // Delete the cache file because the contents no longer exists
-        cache.delete()
-    }
-}
-
-/**
- * A similar server environment for testing the plugin
- */
-class ProductionServer (
-        parent: File
-) : Server(parent, "prod")
-
-/**
- * An environment that offers the debugging feature to the plugin developer
- */
-class DebugServer (
-        parent: File
-) : Server(parent, "debug") {
-
-    var enabled = false
-
 }
