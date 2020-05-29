@@ -254,7 +254,7 @@ fun printEULA() {
             "| |                        ███████╗╚██████╔╝███████╗██║  ██║                        | |",
             "| |                                                                                 | |",
             "| |                                                                                 | |",
-            "| |                [#] By using @iHDeveloper/spigot-starter-kit [#]                 | |",
+            "| |                       [#] By using Spigot Starter Kit [#]                       | |",
             "| |                                                                                 | |",
             "| |              You are indicating your agreement to Minecraft's EULA              | |",
             "| |               https://account.mojang.com/documents/minecraft_eula               | |",
@@ -286,7 +286,7 @@ fun printIntro() {
             """    /_/      /____/              """,
             """                                 """,
             """    [#] Spigot Starter Kit [#]   """,
-            """        By: @iHDeveloper         """,
+            """                                 """,
             """================================="""
     )
     for (line in intro) {
