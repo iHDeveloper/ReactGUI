@@ -72,3 +72,18 @@ val buildTools = BuildTools(
         useSpigot = false
 )
 ```
+
+## Change Server Version
+If you want to change the Minecraft server version.
+- Edit `build.gradle.kts`
+    ```kotlin
+    val buildTools = BuildTools(
+    
+            // Minecraft Server Version (Ex: 1.8.8)
+            minecraftVersion = "1.8.8",
+    
+            /* ... */
+    )
+    ```
+- Delete `.build-tools` directory by executing `rm -rf .build-tools/`
+- Run `./gradlew setup`
