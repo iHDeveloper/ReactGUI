@@ -8,6 +8,7 @@ A kit for spigot starter to start developing plugins.
 - [Build the plugin](#build-the-plugin)
 - [Test the plugin](#test-the-plugin)
 - [Use Craftbukkit](#use-craftbukkit)
+- [Change Minecraft Version](#change-server-version)
 
 ## Goal
 The goal of this starter kit is to help make spigot plugin easy in development and a simple point to start.
