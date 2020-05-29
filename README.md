@@ -7,6 +7,7 @@ A kit for spigot starter to start developing plugins.
 - [Rename the plugin](#rename-the-plugin)
 - [Build the plugin](#build-the-plugin)
 - [Test the plugin](#test-the-plugin)
+- [Use Craftbukkit](#use-craftbukkit)
 
 ## Goal
 The goal of this starter kit is to help make spigot plugin easy in development and a simple point to start.
@@ -60,3 +61,14 @@ Builds the plugin and put it in `build/{name}.jar`.
 ./gradlew run
 ```
 Run a server to test the plugin on it.
+
+## Use Craftbukkit
+If you want to use `Craftbukkit` without `Spigot` then edit `build.gradle.kts`
+```kotlin
+val buildTools = BuildTools(
+        /* ... */
+
+        // Change it to false to use Craftbukkit instead
+        useSpigot = false
+)
+```
