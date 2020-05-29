@@ -229,6 +229,14 @@ tasks {
         }
     }
 
+    /**
+     * Configure the generated shadow jar
+     */
+    shadowJar {
+        val name = "${archiveBaseName.get()}-${archiveVersion.get()}.${archiveExtension.get()}"
+        archiveFileName.set(name)
+    }
+
 }
 
 /**
@@ -292,7 +300,6 @@ class BuildTools (
 ) {
     val buildDir = File(".build-tools")
     val file = File(buildDir, "build-tools.jar")
-
     val libsDir = File("build/libs/")
 
     val server = Server()
