@@ -63,15 +63,19 @@ Builds the plugin and put it in `build/{name}.jar`.
 Run a server to test the plugin on it.
 
 ## Use Craftbukkit
-If you want to use `Craftbukkit` without `Spigot` then edit `build.gradle.kts`
-```kotlin
-val buildTools = BuildTools(
-        /* ... */
-
-        // Change it to false to use Craftbukkit instead
-        useSpigot = false
-)
-```
+If you want to use `Craftbukkit` without `Spigot`
+- Edit `build.gradle.kts`
+    ```kotlin
+    val buildTools = BuildTools(
+            /* ... */
+    
+            // Change it to false to use Craftbukkit instead
+            useSpigot = false
+    )
+    ```
+- Delete `.build-tools` directory by executing `rm -rf .build-tools/`
+    > If `.build-tools/` exists in your kit workspace
+- Run `./gradlew setup`
 
 ## Change Server Version
 If you want to change the Minecraft server version.
