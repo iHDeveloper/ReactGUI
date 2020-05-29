@@ -25,23 +25,11 @@ repositories {
     mavenCentral()
 }
 
-val serverJarConfig: Configuration by configurations.creating
-
 dependencies {
     // Include the server jar source
-    serverJarConfig(files(buildTools.serverJar.absolutePath))
-    compileOnly(serverJarConfig)
+    compileOnly(files(buildTools.serverJar.absolutePath))
 
     testCompileOnly("junit", "junit", "4.12")
-}
-
-buildscript {
-
-    dependencies {
-        // For reading the Main class in plugin.yml
-        classpath("org.yaml", "snakeyaml", "1.26")
-    }
-
 }
 
 configure<JavaPluginConvention> {
@@ -50,6 +38,9 @@ configure<JavaPluginConvention> {
 
 tasks {
 
+    /**
+     * Delete the server after the gradle clean task is done
+     */
     getByName("clean").doLast {
         // Delete the server folder
         buildTools.server.delete()
@@ -76,8 +67,8 @@ tasks {
      */
     register("setup") {
 
-        // Build the production plugin to be able to test it
-        dependsOn(":build-production-plugin")
+        // Build the plugin to be able to test it
+        dependsOn(":build-plugin")
     }
 
     /**
@@ -98,7 +89,10 @@ tasks {
         if (temp.isFile)
             error("Can't use the folder [.build-tools] because it's a file")
 
+        // Download the latest successful build of SpigotMC/BuildTools
         src("https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar")
+
+        // Put it in the .build-tools/
         dest(buildTools.file)
     }
 
@@ -150,7 +144,7 @@ tasks {
             } catch (e: Exception) {}
 
             // Since the process didn't stop
-            // This means the user indicates to agree on the EULA
+            // This means the user indicates to agree on the Minecraft EULA
             // And this code automates the indicates process
             val eula = server.eula
             if (eula.exists()) {
@@ -171,7 +165,7 @@ tasks {
                 }
             }
 
-            // Sends "stop" command to the common server to stop after initialising
+            // Sends "stop" command to the server to stop after initialising
             val stopCommand = "stop"
             val input = ByteArrayInputStream(stopCommand.toByteArray(StandardCharsets.UTF_8))
 
@@ -191,13 +185,15 @@ tasks {
     }
 
     /**
-     * Build the production plugin for the production server
+     * Build the plugin for the server
      */
     register("build-plugin") {
         dependsOn("build-server")
         dependsOn(":shadowJar")
 
         doLast {
+
+            // Copy generated plugin jar into server plugins folder
             copy {
                 from(buildTools.libsDir)
                 into(buildTools.server.plugins)
@@ -209,7 +205,7 @@ tasks {
     }
 
     /**
-     * Run the production server with the production plugin on it
+     * Run the server with the plugin on it
      */
     register("run") {
         dependsOn(":build-plugin")
@@ -218,9 +214,10 @@ tasks {
             val server = buildTools.server
 
             printIntro()
-            logger.lifecycle("> Starting the production server...")
+            logger.lifecycle("> Starting the server...")
             logger.lifecycle("")
 
+            // Run the server to test the plugin
             javaexec {
                 standardInput = System.`in`
                 workingDir = server.dir
@@ -298,14 +295,6 @@ class BuildTools (
 
     val libsDir = File("build/libs/")
 
-    private val pluginConfig = File("src/main/resources/plugin.yml")
-
-    private val serversDir = File("server")
-
-    init {
-        serversDir.mkdir()
-    }
-
     val server = Server()
 
     val pluginJarName: String
@@ -347,7 +336,7 @@ open class Server {
     /**
      * Does the server exist in the right way
      */
-    open val exists: Boolean
+    val exists: Boolean
         get() {
             return dir.exists() and plugins.exists() and jar.exists() and eula.exists()
         }
@@ -363,7 +352,7 @@ open class Server {
     /**
      * Delete the server
      */
-    open fun delete() {
+    fun delete() {
         // Delete everything including the directory itself
         dir.deleteRecursively()
 
