@@ -9,6 +9,39 @@ Making the plugin development an easy point to start
 2. Setup the workspace by `./gradlew setup`
 3. Execute `./gradlew run` to run the server to test your plugin
 
+## Rename the plugin
+1. Change the project name the `settings.gradle.kts`
+    ```kotlin
+    rootProject.name = "your-plugin-name"
+    ```
+2. Change the group in `build.gradle.kts`
+    ```kotlin
+    group = "yourdomain.yourname.pluginName"
+    // Example
+    group = "me.ihdeveloper.example"
+    ```
+   > Your group name should follow [Oracle(Java Docs): Naming a package](https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html).
+3. Rename the main package to your group name
+    1. Go to `src/main/java`
+    2. You will find `com.example.plugin`
+    3. Rename the package using your favourite IDE to the same group name you change above
+    > Your package name should follow [Oracle(Java Docs): Naming a package](https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html).
+4. Change the main class path in plugin configuration
+    1. Go to `src/main/resources`
+    2. Edit `plugin.yml`
+    3. Change it from
+        ```yaml
+        name: example-plugin
+        main: com.example.plugin.Main
+        ```
+        to
+        ```yaml
+        name: your-plugin-name
+        author: your-name
+        main: yourdomain.yourname.pluginName.Main
+        ```
+5. You are ready to go!
+
 ## Build the plugin
 ```shell script
 ./gradlew build
