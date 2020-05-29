@@ -9,7 +9,7 @@ A kit for spigot starter to start developing plugins.
 - [Test the plugin](#test-the-plugin)
 
 ## Goal
-Making the plugin development an easy point to start
+The goal of this starter kit is to help make spigot plugin easy in development and a simple point to start.
 
 ## Getting Started
 1. Clone the repository
