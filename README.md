@@ -17,6 +17,8 @@ The goal of this starter kit is to help make spigot plugin easy in development a
 1. Clone the repository
 2. Setup the workspace by `./gradlew setup`
 3. Execute `./gradlew run` to run the server to test your plugin
+---
+**You can create an issue to report a bug or suggest improvements to the kit.**
 
 ## Rename the plugin
 1. Change the project name the `settings.gradle.kts`
