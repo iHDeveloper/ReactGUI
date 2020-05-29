@@ -4,6 +4,12 @@ A kit for spigot starter to start developing plugins.
 ## Goal
 Making the plugin development an easy point to start
 
+### Table of Contents
+- [Getting Started](#getting-started)
+- [Rename the plugin](#rename-the-plugin)
+- [Build the plugin](#build-the-plugin)
+- [Test the plugin](#test-the-plugin)
+
 ## Getting Started
 1. Clone the repository
 2. Setup the workspace by `./gradlew setup`
