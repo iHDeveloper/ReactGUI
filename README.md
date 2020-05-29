@@ -1,14 +1,15 @@
 # Spigot Starter Kit
 A kit for spigot starter to start developing plugins.
 
-## Goal
-Making the plugin development an easy point to start
-
 ### Table of Contents
+- [Goal](#goal)
 - [Getting Started](#getting-started)
 - [Rename the plugin](#rename-the-plugin)
 - [Build the plugin](#build-the-plugin)
 - [Test the plugin](#test-the-plugin)
+
+## Goal
+Making the plugin development an easy point to start
 
 ## Getting Started
 1. Clone the repository
