@@ -14,3 +14,9 @@ Making the plugin development an easy point to start
 ./gradlew build
 ```
 Builds the plugin and put it in `build/{name}.jar`.
+
+## Test the plugin
+```shell script
+./gradlew run
+```
+Run a server to test the plugin on it.
