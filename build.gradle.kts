@@ -8,7 +8,7 @@ plugins {
     id ("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-group = "me.ihdeveloper"
+group = "com.example"
 version = "0.1"
 
 val buildTools = BuildTools(

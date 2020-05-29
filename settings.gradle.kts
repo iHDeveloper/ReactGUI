@@ -1,1 +1,1 @@
-rootProject.name = "spigot-starter-kit"
+rootProject.name = "plugin"
