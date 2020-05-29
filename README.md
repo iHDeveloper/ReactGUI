@@ -8,3 +8,9 @@ Making the plugin development an easy point to start
 1. Clone the repository
 2. Setup the workspace by `./gradlew setup`
 3. Execute `./gradlew run` to run the server to test your plugin
+
+## Build the plugin
+```shell script
+./gradlew build
+```
+Builds the plugin and put it in `build/{name}.jar`.
