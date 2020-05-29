@@ -90,4 +90,5 @@ If you want to change the Minecraft server version.
     )
     ```
 - Delete `.build-tools` directory by executing `rm -rf .build-tools/`
+    > If `.build-tools/` exists in your kit workspace
 - Run `./gradlew setup`
