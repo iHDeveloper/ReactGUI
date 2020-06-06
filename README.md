@@ -1,15 +1,24 @@
 # Spigot Starter Kit
 A kit for spigot starter to start developing plugins.
 
+## Goal
+The goal of this starter kit is to help make spigot plugin easy in development and a simple point to start.
+
 ### Table of Contents
-- [Requirements](#requirements)
-- [Goal](#goal)
 - [Getting Started](#getting-started)
+- [Requirements](#requirements)
 - [Rename the plugin](#rename-the-plugin)
 - [Build the plugin](#build-the-plugin)
 - [Test the plugin](#test-the-plugin)
 - [Use Craftbukkit](#use-craftbukkit)
 - [Change Minecraft Version](#change-server-version)
+
+## Getting Started
+1. Clone the repository
+2. Setup the workspace by `./gradlew setup`
+3. Execute `./gradlew run` to run the server to test your plugin
+---
+**You can create an issue to report a bug or suggest improvements to the kit.**
 
 # Requirements
 **Reference:** [[SpigotMC] Build Tools - Prerequisties](https://www.spigotmc.org/wiki/buildtools/#prerequisites)
@@ -33,16 +42,6 @@ Distribution Name | Command
 Debian / Ubuntu | `sudo apt-get install git openjdk-8-jre-headless`
 CentOS / RHEL | `sudo yum install git java-1.8.0-openjdk-devel`
 Arch | `sudo pacman -S jdk8-openjdk git`
-
-## Goal
-The goal of this starter kit is to help make spigot plugin easy in development and a simple point to start.
-
-## Getting Started
-1. Clone the repository
-2. Setup the workspace by `./gradlew setup`
-3. Execute `./gradlew run` to run the server to test your plugin
----
-**You can create an issue to report a bug or suggest improvements to the kit.**
 
 ## Rename the plugin
 1. Change the project name the `settings.gradle.kts`
