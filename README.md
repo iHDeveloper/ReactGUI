@@ -2,6 +2,7 @@
 A kit for spigot starter to start developing plugins.
 
 ### Table of Contents
+- [Requirements](#requirements)
 - [Goal](#goal)
 - [Getting Started](#getting-started)
 - [Rename the plugin](#rename-the-plugin)
@@ -9,6 +10,29 @@ A kit for spigot starter to start developing plugins.
 - [Test the plugin](#test-the-plugin)
 - [Use Craftbukkit](#use-craftbukkit)
 - [Change Minecraft Version](#change-server-version)
+
+# Requirements
+**Reference:** [[SpigotMC] Build Tools - Prerequisties](https://www.spigotmc.org/wiki/buildtools/#prerequisites)
+
+### Windows
+- [Git](https://gitforwindows.org/)
+- [Java](https://www.oracle.com/sa/java/technologies/javase-downloads.html)
+> We prefer you to download [Java 8](https://www.oracle.com/java/technologies/javase-jre8-downloads.html)
+
+### Mac
+- [Git](http://sourceforge.net/projects/git-osx-installer/files/)
+- [Java](https://gist.github.com/johan/10590467)
+> Java may need to be updated from the Apple distributed version, and even if previously updated,
+> may need to be linked for shell use.
+
+### Linux
+**Both git and Java, as well as util commands, can be installed using a single command via your package manager.**
+
+Distribution Name | Command
+----------------- | -------
+Debian / Ubuntu | `sudo apt-get install git openjdk-8-jre-headless`
+CentOS / RHEL | `sudo yum install git java-1.8.0-openjdk-devel`
+Arch | `sudo pacman -S jdk8-openjdk git`
 
 ## Goal
 The goal of this starter kit is to help make spigot plugin easy in development and a simple point to start.
