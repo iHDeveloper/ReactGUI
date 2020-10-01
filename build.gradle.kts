@@ -11,6 +11,13 @@ plugins {
 group = "com.example"
 version = "0.1"
 
+val server = Server(
+        /**
+         * Directory of the server
+         */
+        dir = File("server")
+)
+
 val buildTools = BuildTools(
 
         // Server Version
@@ -27,7 +34,10 @@ repositories {
 
 dependencies {
     // Include the server jar source
-    compileOnly(files(buildTools.serverJar.absolutePath))
+    if (server.jar.exists())
+        compileOnly(files(server.jar.absolutePath))
+    else if (buildTools.serverJar.exists())
+        compileOnly(files(buildTools.serverJar.absolutePath))
 
     testCompileOnly("junit", "junit", "4.12")
 }
@@ -43,14 +53,14 @@ tasks {
      */
     getByName("clean").doLast {
         // Delete the server folder
-        buildTools.server.delete()
+        server.delete()
     }
 
     /**
      * Overwrite the build task to put the compiled jar into the build folder instead of build/libs
      */
     build {
-        dependsOn(":shadowJar")
+        dependsOn("shadowJar")
 
         // Copy the compiled plugin jar from build/libs to build/
         doLast {
@@ -68,7 +78,7 @@ tasks {
     register("setup") {
 
         // Build the plugin to be able to test it
-        dependsOn(":build-plugin")
+        dependsOn("build-plugin")
     }
 
     /**
@@ -76,7 +86,7 @@ tasks {
      */
     register<Download>("download-build-tools") {
         onlyIf {
-            !buildTools.file.exists()
+            !buildTools.file.exists() && !server.jar.exists()
         }
 
         val temp = buildTools.buildDir
@@ -100,10 +110,10 @@ tasks {
      * Run build tools to create tools for the workspace
      */
     register("run-build-tools") {
-        dependsOn(":download-build-tools")
+        dependsOn("download-build-tools")
 
         onlyIf {
-            !buildTools.serverJar.exists()
+            !server.jar.exists()
         }
 
         doLast {
@@ -124,9 +134,7 @@ tasks {
      * Build the server to test the plugin on it
      */
     register("build-server") {
-        dependsOn(":run-build-tools")
-
-        val server = buildTools.server
+        dependsOn("run-build-tools")
 
         onlyIf {
             !server.exists
@@ -138,9 +146,9 @@ tasks {
             // Print the EULA to the user
             printEULA()
 
-            // Wait for 10 seconds to realise the message
+            // Wait for 2 seconds to realise the message
             try {
-                Thread.sleep(10 * 1000)
+                Thread.sleep(2 * 1000)
             } catch (e: Exception) {}
 
             // Since the process didn't stop
@@ -189,17 +197,14 @@ tasks {
      */
     register("build-plugin") {
         dependsOn("build-server")
-        dependsOn(":shadowJar")
+        dependsOn("build")
 
         doLast {
 
             // Copy generated plugin jar into server plugins folder
             copy {
                 from(buildTools.libsDir)
-                into(buildTools.server.plugins)
-                rename {
-                    buildTools.pluginJarName
-                }
+                into(server.plugins)
             }
         }
     }
@@ -208,10 +213,9 @@ tasks {
      * Run the server with the plugin on it
      */
     register("run") {
-        dependsOn(":build-plugin")
+        dependsOn("build-plugin")
 
         doLast {
-            val server = buildTools.server
 
             printIntro()
             logger.lifecycle("> Starting the server...")
@@ -300,13 +304,6 @@ class BuildTools (
     val file = File(buildDir, "build-tools.jar")
     val libsDir = File("build/libs/")
 
-    val server = Server()
-
-    val pluginJarName: String
-        get() {
-            return "${rootProject.name}.jar"
-        }
-
     val serverJar = if (useSpigot) {
         File(buildDir, "spigot-${minecraftVersion}.jar")
     } else {
@@ -317,12 +314,9 @@ class BuildTools (
 /**
  * Help making the server and structuring it
  */
-open class Server {
-    /**
-     * Directory of the server
-     */
-    val dir = File("server")
-
+class Server(
+        val dir: File = File("server")
+) {
     /**
      * Plugins of the sever
      */
