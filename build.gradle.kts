@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets
 
 plugins {
     java
+    kotlin("jvm") version "1.4.21"
     id ("de.undercouch.download") version "4.0.4"
     id ("com.github.johnrengelman.shadow") version "5.2.0"
 }
@@ -25,19 +26,30 @@ val buildTools = BuildTools(
 
         // Spigot = true
         // Craftbukkit = false
-        useSpigot = true
+        useSpigot = true,
+
+        // Use local cached dependency (default = false)
+        useLocalDependency = true
 )
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
+    implementation(kotlin("stdlib-jdk8"))
+
     // Include the server jar source
-    if (server.jar.exists())
-        compileOnly(files(server.jar.absolutePath))
-    else if (buildTools.serverJar.exists())
-        compileOnly(files(buildTools.serverJar.absolutePath))
+    if (buildTools.useLocalDependency) {
+        compileOnly("org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT")
+    } else {
+        if (server.jar.exists()) {
+            compileOnly(files(server.jar.absolutePath))
+        } else if (buildTools.serverJar.exists()) {
+            compileOnly(files(buildTools.serverJar.absolutePath))
+        }
+    }
 
     testCompileOnly("junit", "junit", "4.12")
 }
@@ -72,6 +84,13 @@ tasks {
         }
     }
 
+    shadowJar {
+        from("LICENSE")
+
+        val name = "${archiveBaseName.get()}-${archiveVersion.get()}.${archiveExtension.get()}"
+        archiveFileName.set(name)
+    }
+
     /**
      *  Setup the workspace to develop the plugin
      */
@@ -86,7 +105,7 @@ tasks {
      */
     register<Download>("download-build-tools") {
         onlyIf {
-            !buildTools.file.exists() && !server.jar.exists()
+            !buildTools.useLocalDependency && !buildTools.file.exists() && !server.jar.exists()
         }
 
         val temp = buildTools.buildDir
@@ -113,7 +132,7 @@ tasks {
         dependsOn("download-build-tools")
 
         onlyIf {
-            !server.jar.exists()
+            !buildTools.useLocalDependency && !server.jar.exists()
         }
 
         doLast {
@@ -137,7 +156,7 @@ tasks {
         dependsOn("run-build-tools")
 
         onlyIf {
-            !server.exists
+            !buildTools.useLocalDependency && !server.exists
         }
 
         server.mkdir()
@@ -232,15 +251,6 @@ tasks {
             }
         }
     }
-
-    /**
-     * Configure the generated shadow jar
-     */
-    shadowJar {
-        val name = "${archiveBaseName.get()}-${archiveVersion.get()}.${archiveExtension.get()}"
-        archiveFileName.set(name)
-    }
-
 }
 
 /**
@@ -298,7 +308,8 @@ fun printIntro() {
 
 class BuildTools (
         val minecraftVersion: String,
-        val useSpigot: Boolean
+        val useSpigot: Boolean,
+        val useLocalDependency: Boolean
 ) {
     val buildDir = File(".build-tools")
     val file = File(buildDir, "build-tools.jar")

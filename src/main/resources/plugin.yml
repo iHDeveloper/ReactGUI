@@ -1,4 +1,4 @@
-name: example-plugin
-version: 0.1
-author: example-name
-main: com.example.plugin.Main
+name: ReactGUI
+version: 1.0
+author: iHDeveloper
+main: me.ihdeveloper.react_gui.Main
