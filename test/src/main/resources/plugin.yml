@@ -1,0 +1,7 @@
+name: ReactGUI-Test
+version: 0.1
+author: iHDeveloper
+main: me.ihdeveloper.react_gui.test.Main
+
+depend:
+  - ReactGUI
