@@ -7,8 +7,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 abstract class GUIComponent {
-    var isUpdated: Boolean = false
-        private set
+    internal var isUpdated: Boolean = true
 
     protected fun update() { isUpdated = true }
 
@@ -35,6 +34,8 @@ class GUIScreen(
 
     fun setItem(index: Int, component: GUIComponent) {
         components[index] = component
+
+        component.isUpdated = false
         inventory.setItem(index, component.render())
     }
 

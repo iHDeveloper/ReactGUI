@@ -2,6 +2,7 @@ package me.ihdeveloper.react_gui.test
 
 import me.ihdeveloper.react_gui.GUIScreen
 import me.ihdeveloper.react_gui.openScreen
+import me.ihdeveloper.react_gui.std.GUICheckbox
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -56,12 +57,23 @@ object TestScreenCommand : CommandExecutor {
 
 }
 
+private fun screen(columns: Int, title: String, oneUseOnly: Boolean = true, block: GUIScreen.() -> Unit): GUIScreen {
+    val screen = GUIScreen(columns, title, oneUseOnly)
+    block(screen)
+    return screen
+}
+
 private fun buildTestScreen(type: String): GUIScreen? = when(type) {
     "plain" -> {
         GUIScreen(
                 columns = 3,
                 title = "Plain Screen"
         )
+    }
+    "sample" -> {
+        screen(3, "Sample Screen") {
+            setItem(5, 2, GUICheckbox(false, "Players Visibility", arrayOf("§7Toggle to show/hide players")))
+        }
     }
     else -> null
 }
