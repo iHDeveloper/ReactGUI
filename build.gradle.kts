@@ -46,8 +46,12 @@ allprojects {
     }
 
     dependencies {
+        val stdlib = kotlin("stdlib-jdk8")
+
         if (project == rootProject) {
-            implementation(kotlin("stdlib-jdk8"))
+            implementation(stdlib)
+        } else {
+            compileOnly(stdlib)
         }
 
         // Include the server jar source

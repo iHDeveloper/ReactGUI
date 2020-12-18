@@ -1,6 +1,7 @@
 package me.ihdeveloper.react_gui.test
 
 import me.ihdeveloper.react_gui.GUIScreen
+import me.ihdeveloper.react_gui.openScreen
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -42,18 +43,25 @@ object TestScreenCommand : CommandExecutor {
             return false
 
         val type = args[0]
+        val screen = buildTestScreen(type)
 
-        when (type) {
-            "plain" -> {
-                val screen = GUIScreen(
-                        columns = 3,
-                        title = "Plain Screen"
-                )
-
-                // TODO open screen for the player (via API call)
-            }
+        if (screen == null) {
+            player.sendMessage("§cThere's no test screen with that name!")
+            return true
         }
+
+        player.openScreen(screen)
         return true
     }
 
+}
+
+private fun buildTestScreen(type: String): GUIScreen? = when(type) {
+    "plain" -> {
+        GUIScreen(
+                columns = 3,
+                title = "Plain Screen"
+        )
+    }
+    else -> null
 }
