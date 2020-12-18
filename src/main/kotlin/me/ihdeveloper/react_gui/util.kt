@@ -1,10 +1,12 @@
+@file:JvmName("GUIUtils")
+
 package me.ihdeveloper.react_gui
 
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
-internal fun itemStack(
+fun itemStack(
         material: Material,
         amount: Int = 1,
         type: Short = 0,
@@ -15,7 +17,7 @@ internal fun itemStack(
     return itemStack
 }
 
-internal fun ItemStack.meta(block: ItemMeta.() -> Unit) {
+fun ItemStack.meta(block: ItemMeta.() -> Unit) {
     itemMeta = itemMeta.apply {
         block(this)
     }

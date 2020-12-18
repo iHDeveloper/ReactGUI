@@ -72,7 +72,7 @@ private fun buildTestScreen(type: String): GUIScreen? = when(type) {
     }
     "sample" -> {
         screen(3, "Sample Screen") {
-            setItem(5, 2, GUICheckbox(false, "Players Visibility", arrayOf("§7Toggle to show/hide players")))
+            setComponent(5, 2, GUICheckbox(false, "Players Visibility", arrayOf("§7Toggle to show/hide players")))
         }
     }
     else -> null
