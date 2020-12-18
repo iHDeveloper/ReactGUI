@@ -3,5 +3,11 @@ version: 0.1
 author: iHDeveloper
 main: me.ihdeveloper.react_gui.test.Main
 
+commands:
+  test-screen:
+    description: Used to test screens built by ReactGUI
+    usage: "Usage: /<command> [plain]"
+
 depend:
   - ReactGUI
+

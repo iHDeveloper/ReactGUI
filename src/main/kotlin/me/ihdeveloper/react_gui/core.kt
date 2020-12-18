@@ -3,8 +3,8 @@ package me.ihdeveloper.react_gui
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import kotlin.math.min
 import kotlin.math.max
+import kotlin.math.min
 
 abstract class GUIComponent {
     var isUpdated: Boolean = false
@@ -45,15 +45,17 @@ class GUIScreen(
         alreadyUsed = true
 
         // TODO tell GUI manager that this player opened this screen
+        GUIScreenManager.open(this, player)
 
         // TODO fire open event
         player.openInventory(inventory)
     }
 
-    internal fun close(player: Player) {
-        // TODO fire close event
-
+    internal fun close(player: Player, forced: Boolean = false) {
+        GUIScreenManager.close(player)
         player.closeInventory()
+
+        // TODO fire close event
     }
 
     internal fun reRender() {

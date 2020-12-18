@@ -46,7 +46,9 @@ allprojects {
     }
 
     dependencies {
-        implementation(kotlin("stdlib-jdk8"))
+        if (project == rootProject) {
+            implementation(kotlin("stdlib-jdk8"))
+        }
 
         // Include the server jar source
         if (buildTools.useLocalDependency) {
