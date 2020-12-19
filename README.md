@@ -1,120 +1,31 @@
-# Spigot Starter Kit
-A kit for spigot starter to start developing plugins.
+# ReactGUI **(Coming soon)**
+A spigot plugin API for making reactive inventories. Using the philosophy of [React](https://github.com/facebook/react).
+This plugin will allow you on creating GUIs faster. And, focus on designing them without caring about how it would work.
 
-## Goal
-The goal of this starter kit is to help make spigot plugin easy in development and a simple point to start.
+The plugin includes a rich standard library to help you build using built-in components.
 
-### Table of Contents
-- [Getting Started](#getting-started)
-- [Requirements](#requirements)
-- [Rename the plugin](#rename-the-plugin)
-- [Build the plugin](#build-the-plugin)
-- [Test the plugin](#test-the-plugin)
-- [Use Craftbukkit](#use-craftbukkit)
-- [Change Minecraft Version](#change-server-version)
+**The plugin is under heavy development**
 
-## Getting Started
-1. Clone the repository
-2. Setup the workspace by `./gradlew setup`
-3. Execute `./gradlew run` to run the server to test your plugin
----
-**You can create an issue to report a bug or suggest improvements to the kit.**
+## Samples of the prototype of the project
 
-# Requirements
-**Reference:** [[SpigotMC] Build Tools - Prerequisties](https://www.spigotmc.org/wiki/buildtools/#prerequisites)
+- Creating custom component like a **Button**
+![image](https://user-images.githubusercontent.com/20463031/102676135-2cb2e000-41ad-11eb-8157-096227521b12.png)
 
-### Windows
-- [Git](https://gitforwindows.org/)
-- [Java](https://www.oracle.com/sa/java/technologies/javase-downloads.html)
-> We prefer you to download [Java 8](https://www.oracle.com/java/technologies/javase-jre8-downloads.html)
+- Creating a simple screen
+![image](https://user-images.githubusercontent.com/20463031/102676164-4a804500-41ad-11eb-8381-3a3a5bcacf88.png)
 
-### Mac
-- [Git](http://sourceforge.net/projects/git-osx-installer/files/)
-- [Java](https://gist.github.com/johan/10590467)
-> Java may need to be updated from the Apple distributed version, and even if previously updated,
-> may need to be linked for shell use.
+- Test the simple screen
+![image](https://user-images.githubusercontent.com/20463031/102676192-6be13100-41ad-11eb-8690-e1ca15632aa7.png)
 
-### Linux
-**Both git and Java, as well as util commands, can be installed using a single command via your package manager.**
+## Architecture
+The API assumes that the inventory is called **Screen**.
+And, the items are called **Components**.
 
-Distribution Name | Command
------------------ | -------
-Debian / Ubuntu | `sudo apt-get install git openjdk-8-jre-headless`
-CentOS / RHEL | `sudo yum install git java-1.8.0-openjdk-devel`
-Arch | `sudo pacman -S jdk8-openjdk git`
+Each **Screen** has mutliple components up to 54. With up to 6 columns. Each row has 9 components at least
 
-## Rename the plugin
-1. Change the project name the `settings.gradle.kts`
-    ```kotlin
-    rootProject.name = "your-plugin-name"
-    ```
-2. Change the group in `build.gradle.kts`
-    ```kotlin
-    group = "yourdomain.yourname.pluginName"
-    // Example
-    group = "me.ihdeveloper.example"
-    ```
-   > Your group name should follow [Oracle(Java Docs): Naming a package](https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html).
-3. Rename the main package to your group name
-    1. Go to `src/main/java`
-    2. You will find `com.example.plugin`
-    3. Rename the package using your favourite IDE to the same group name you change above
-    > Your package name should follow [Oracle(Java Docs): Naming a package](https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html).
-4. Change the main class path in plugin configuration
-    1. Go to `src/main/resources`
-    2. Edit `plugin.yml`
-    3. Change it from
-        ```yaml
-        name: example-plugin
-        main: com.example.plugin.Main
-        ```
-        to
-        ```yaml
-        name: your-plugin-name
-        author: your-name
-        main: yourdomain.yourname.pluginName.Main
-        ```
-5. You are ready to go!
+Each **Component** has multiple states. Changing one of those states will flag the **Component** to be re-rendered.
 
-## Build the plugin
-```shell script
-./gradlew build
-```
-Builds the plugin and put it in `build/{name}.jar`.
+The screen gets re-rendered every tick. It will re-render any flagged **Components**.
 
-## Test the plugin
-```shell script
-./gradlew run
-```
-Run a server to test the plugin on it.
-
-## Use Craftbukkit
-If you want to use `Craftbukkit` without `Spigot`
-- Edit `build.gradle.kts`
-    ```kotlin
-    val buildTools = BuildTools(
-            /* ... */
-    
-            // Change it to false to use Craftbukkit instead
-            useSpigot = false
-    )
-    ```
-- Delete `.build-tools` directory by executing `rm -rf .build-tools/`
-    > If `.build-tools/` exists in your kit workspace
-- Run `./gradlew setup`
-
-## Change Server Version
-If you want to change the Minecraft server version.
-- Edit `build.gradle.kts`
-    ```kotlin
-    val buildTools = BuildTools(
-    
-            // Minecraft Server Version (Ex: 1.8.8)
-            minecraftVersion = "1.8.8",
-    
-            /* ... */
-    )
-    ```
-- Delete `.build-tools` directory by executing `rm -rf .build-tools/`
-    > If `.build-tools/` exists in your kit workspace
-- Run `./gradlew setup`
+## Getting started
+The plugin is not ready yet to be tested. But, It will be ready ASAP.
