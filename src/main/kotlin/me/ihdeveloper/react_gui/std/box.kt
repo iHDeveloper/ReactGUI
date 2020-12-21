@@ -23,12 +23,15 @@ class GUICheckbox(
             field = value
         }
 
+    var stateHandler: ((player: Player, oldValue: Boolean, newValue: Boolean) -> Unit)? = null
+
     init {
-        eventHandler = this
+        super.eventHandler = this
     }
 
     override fun onClick(player: Player) {
         isChecked = !isChecked
+        stateHandler?.invoke(player, !isChecked,  isChecked)
     }
 
     override fun render(): ItemStack {
@@ -43,5 +46,39 @@ class GUICheckbox(
                 }
             }
         }
+    }
+}
+
+class GUIRadioGroup(
+
+        /** True if one option is required to be enabled */
+        private val required: Boolean = false
+) {
+    private val checkboxes = mutableListOf<GUICheckbox>()
+
+    fun add(checkbox: GUICheckbox) {
+        checkbox.stateHandler = { _: Player, old: Boolean, new: Boolean ->
+            if (required && old) {
+                checkbox.isChecked = true
+            } else {
+                if (old != new) {
+                    checkboxes.forEach {
+                        if (it !== checkbox) {
+                            it.isChecked = false
+                        }
+                    }
+                }
+            }
+        }
+
+        checkboxes.add(checkbox)
+    }
+
+    fun clear() {
+        checkboxes.forEach {
+            it.stateHandler = null
+        }
+
+        checkboxes.clear()
     }
 }

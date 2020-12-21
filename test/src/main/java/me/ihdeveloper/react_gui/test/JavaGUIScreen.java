@@ -1,0 +1,88 @@
+package me.ihdeveloper.react_gui.test;
+
+import me.ihdeveloper.react_gui.GUIScreen;
+import me.ihdeveloper.react_gui.GUIScreenListener;
+import me.ihdeveloper.react_gui.std.GUICheckbox;
+import me.ihdeveloper.react_gui.std.GUIRadioGroup;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+public class JavaGUIScreen extends GUIScreen implements GUIScreenListener {
+    private final GUICheckbox perm1 = new GUICheckbox(false, "Permission 1", new String[] { "Description for permission 1" });
+    private final GUICheckbox perm2 = new GUICheckbox(false, "Permission 2", new String[] { "Description for permission 2" });
+    private final GUICheckbox perm3 = new GUICheckbox(false, "Permission 3", new String[] { "Description for permission 3" });
+
+    private final GUIRadioGroup modeGroup = new GUIRadioGroup(false);
+    private final GUICheckbox mode1 = new GUICheckbox(false, "Mode 1", new String[] { "Description for mode 1" });
+    private final GUICheckbox mode2 = new GUICheckbox(false, "Mode 2", new String[] { "Description for mode 2" });
+    private final GUICheckbox mode3 = new GUICheckbox(false, "Mode 3", new String[] { "Description for mode 3" });
+
+    public JavaGUIScreen() {
+        super(5, "§1» §9Screen written with §3Java", true);
+
+        setComponent(3, 2, perm1);
+        setComponent(5, 2, perm2);
+        setComponent(7, 2, perm3);
+
+        setComponent(2, 4, mode1);
+        setComponent(3, 4, mode2);
+        setComponent(4, 4, mode3);
+
+        setEventHandler(this);
+    }
+
+    @Override
+    public void onOpen(@NotNull Player player) {
+        /* This method is being called before opening the inventory (aka Screen) */
+
+        // TODO load from mysql and update the state of the components
+        perm1.setChecked(true);
+        perm2.setChecked(false);
+        perm3.setChecked(true);
+
+        mode1.setChecked(true);
+        mode2.setChecked(false);
+        mode3.setChecked(false);
+
+        /* Radio group helps forces the player to choose only one option! */
+        modeGroup.add(mode1);
+        modeGroup.add(mode2);
+        modeGroup.add(mode3);
+    }
+
+    @Override
+    public void onClose(@NotNull Player player, boolean forced) {
+        modeGroup.clear();
+
+        if (forced) {
+            Bukkit.getConsoleSender().sendMessage("§eCouldn't update the data for player §9" + player.getName() + " §7(FORCED_CLOSE)");
+            return;
+        }
+
+        boolean p1 = perm1.isChecked();
+        boolean p2 = perm2.isChecked();
+        boolean p3 = perm3.isChecked();
+
+        boolean m1 = mode1.isChecked();
+        boolean m2 = mode2.isChecked();
+        boolean m3 = mode3.isChecked();
+
+        player.sendMessage("§ePermission 1:§" + (p1 ? "a true" : "c false"));
+        player.sendMessage("§ePermission 2:§" + (p2 ? "a true" : "c false"));
+        player.sendMessage("§ePermission 3:§" + (p3 ? "a true" : "c false"));
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("§eYou have chosen mode §7(not required)§e:§");
+        if (m1) {
+            builder.append("f Mode 1");
+        } else if (m2) {
+            builder.append("f Mode 2");
+        } else if (m3) {
+            builder.append("f Mode 3");
+        } else {
+            builder.append("c None");
+        }
+        player.sendMessage(builder.toString());
+    }
+}

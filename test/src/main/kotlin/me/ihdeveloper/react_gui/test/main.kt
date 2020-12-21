@@ -58,9 +58,9 @@ object TestScreenCommand : CommandExecutor {
 }
 
 private fun screen(columns: Int, title: String, oneUseOnly: Boolean = true, block: GUIScreen.() -> Unit): GUIScreen {
-    val screen = GUIScreen(columns, title, oneUseOnly)
-    block(screen)
-    return screen
+    return GUIScreen(columns, title, oneUseOnly).apply {
+        block(this)
+    }
 }
 
 private fun buildTestScreen(type: String): GUIScreen? = when(type) {
@@ -74,6 +74,9 @@ private fun buildTestScreen(type: String): GUIScreen? = when(type) {
         screen(3, "Sample Screen") {
             setComponent(5, 2, GUICheckbox(false, "Players Visibility", arrayOf("§7Toggle to show/hide players")))
         }
+    }
+    "java" -> {
+        JavaGUIScreen()
     }
     else -> null
 }

@@ -123,10 +123,8 @@ internal object GUIScreenManager : Runnable, Listener {
     @Suppress("UNUSED")
     fun onInventoryClose(event: InventoryCloseEvent) {
         event.run {
-            val screen = players[player]
-
             // TODO handle errors coming from here
-            screen?.close(player as Player, false)
+            close(player as Player)
         }
     }
 
