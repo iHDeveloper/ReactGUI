@@ -23,8 +23,11 @@ public class JavaGUIScreen extends GUIScreen implements GUIScreenListener {
     public JavaGUIScreen() {
         super(6, "§1» §9Screen written with §3Java", true);
 
+        setComponent(3, 2, new GUIImage("Permission 1", new String[0], Material.WHEAT));
         setComponent(3, 3, perm1);
+        setComponent(5, 2, new GUIImage("Permission 2", new String[0], Material.COAL));
         setComponent(5, 3, perm2);
+        setComponent(7, 2, new GUIImage("Permission 3", new String[0], Material.IRON_INGOT));
         setComponent(7, 3, perm3);
 
         setComponent(2, 5, new GUIImage("Mode 1", new String[0], Material.SIGN, 1, (short) 0));

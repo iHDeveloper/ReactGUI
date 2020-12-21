@@ -3,6 +3,8 @@ package me.ihdeveloper.react_gui.test
 import me.ihdeveloper.react_gui.GUIScreen
 import me.ihdeveloper.react_gui.openScreen
 import me.ihdeveloper.react_gui.std.GUICheckbox
+import me.ihdeveloper.react_gui.std.GUIImage
+import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -72,7 +74,8 @@ private fun buildTestScreen(type: String): GUIScreen? = when(type) {
     }
     "sample" -> {
         screen(3, "Sample Screen") {
-            setComponent(5, 2, GUICheckbox(false, "Players Visibility", arrayOf("§7Toggle to show/hide players")))
+            setComponent(4, 2, GUIImage("Image", arrayOf("A simple image"), Material.CAKE))
+            setComponent(6, 2, GUICheckbox(false, "Checkbox 1", arrayOf("§7A simple checkbox")))
         }
     }
     "java" -> {
