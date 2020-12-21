@@ -13,7 +13,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 abstract class GUIComponent {
-    var eventHandler: GUIEventListener? = null
+    open var eventHandler: GUIEventListener? = null
         protected set
 
     internal var isUpdated: Boolean = true
@@ -32,6 +32,8 @@ open class GUIScreen(
 ) {
     var eventHandler: GUIScreenListener? = null
         protected set
+
+    internal var closedByAPI = false
 
     private val components = mutableMapOf<Int, GUIComponent>()
     private val inventory = Bukkit.createInventory(null, columns * 9, title)
@@ -160,6 +162,10 @@ internal object GUIScreenManager : Runnable, Listener {
     /** Called by GUIScreen. Removes info about the player's screen */
     internal fun close(player: Player) {
         val currentScreen = players.remove(player) ?: return
+
+        if (currentScreen.closedByAPI)
+            return
+
         currentScreen.close(player)
     }
 

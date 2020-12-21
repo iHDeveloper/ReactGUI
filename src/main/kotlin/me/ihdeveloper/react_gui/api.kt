@@ -8,6 +8,10 @@ fun Player.openScreen(screen: GUIScreen) {
     screen.open(this)
 }
 
-fun Player.closeScreen() {
-    GUIScreenManager.players[this]?.close(this, true)
+fun Player.closeScreen() = closeScreen(false)
+fun Player.closeScreen(forced: Boolean = false) {
+    GUIScreenManager.players[this]?.let { screen ->
+        screen.closedByAPI = true
+        screen.close(this, forced)
+    }
 }

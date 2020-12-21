@@ -1,7 +1,10 @@
 package me.ihdeveloper.react_gui.test;
 
+import kotlin.Unit;
 import me.ihdeveloper.react_gui.GUIScreen;
 import me.ihdeveloper.react_gui.GUIScreenListener;
+import me.ihdeveloper.react_gui.ReactGUI;
+import me.ihdeveloper.react_gui.std.GUIButton;
 import me.ihdeveloper.react_gui.std.GUICheckbox;
 import me.ihdeveloper.react_gui.std.GUIImage;
 import me.ihdeveloper.react_gui.std.GUIRadioGroup;
@@ -36,6 +39,13 @@ public class JavaGUIScreen extends GUIScreen implements GUIScreenListener {
         setComponent(3, 6, mode2);
         setComponent(4, 5, new GUIImage("Mode 3", new String[0], Material.DIAMOND, 1, (short) 0));
         setComponent(4, 6, mode3);
+
+        GUIButton closeButton = new GUIButton("§cClose Screen", new String[]{"§7Click to close"}, Material.ARROW);
+        closeButton.setHandler((player) -> {
+            ReactGUI.closeScreen(player);
+            return Unit.INSTANCE;
+        });
+        setComponent(9, 6, closeButton);
 
         setEventHandler(this);
     }

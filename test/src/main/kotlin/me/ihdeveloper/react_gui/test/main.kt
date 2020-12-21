@@ -1,7 +1,9 @@
 package me.ihdeveloper.react_gui.test
 
 import me.ihdeveloper.react_gui.GUIScreen
+import me.ihdeveloper.react_gui.closeScreen
 import me.ihdeveloper.react_gui.openScreen
+import me.ihdeveloper.react_gui.std.GUIButton
 import me.ihdeveloper.react_gui.std.GUICheckbox
 import me.ihdeveloper.react_gui.std.GUIImage
 import org.bukkit.Material
@@ -74,8 +76,13 @@ private fun buildTestScreen(type: String): GUIScreen? = when(type) {
     }
     "sample" -> {
         screen(3, "Sample Screen") {
-            setComponent(4, 2, GUIImage("Image", arrayOf("A simple image"), Material.CAKE))
-            setComponent(6, 2, GUICheckbox(false, "Checkbox 1", arrayOf("§7A simple checkbox")))
+            setComponent(3, 2, GUIImage("Image", arrayOf("A simple image"), Material.CAKE))
+            setComponent(5, 2, GUICheckbox(false, "Checkbox 1", arrayOf("§7A simple checkbox")))
+            setComponent(7, 2, GUIButton("Simple Button", arrayOf("A simple button"), Material.STONE_BUTTON).apply {
+                handler = { player ->
+                    player.closeScreen()
+                }
+            })
         }
     }
     "java" -> {
