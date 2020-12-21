@@ -7,6 +7,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
 import kotlin.math.max
 import kotlin.math.min
@@ -22,13 +23,16 @@ abstract class GUIComponent {
     abstract fun render(): ItemStack
 }
 
-class GUIScreen(
+open class GUIScreen(
         columns: Int,
         title: String,
 
         /** One player can use this screen */
         private val oneUseOnly: Boolean = true
 ) {
+    var eventHandler: GUIScreenListener? = null
+        protected set
+
     private val components = mutableMapOf<Int, GUIComponent>()
     private val inventory = Bukkit.createInventory(null, columns * 9, title)
     private var alreadyUsed = false
@@ -61,10 +65,9 @@ class GUIScreen(
         }
         alreadyUsed = true
 
-        // TODO tell GUI manager that this player opened this screen
         GUIScreenManager.open(this, player)
 
-        // TODO fire open event
+        eventHandler?.onOpen(player)
         player.openInventory(inventory)
     }
 
@@ -72,7 +75,7 @@ class GUIScreen(
         GUIScreenManager.close(player)
         player.closeInventory()
 
-        // TODO fire close event
+        eventHandler?.onClose(player, forced)
     }
 
     internal fun reRender() {
@@ -104,13 +107,13 @@ internal object GUIScreenManager : Runnable, Listener {
                 if (eventHandler == null)
                     return
 
-                if (eventHandler is GUIClickEvent &&
+                if (eventHandler is GUIClickListener &&
                         (action == InventoryAction.PICKUP_ONE
                         || action == InventoryAction.PICKUP_SOME
                         || action == InventoryAction.PICKUP_HALF
                         || action == InventoryAction.PICKUP_ALL)
                 ) {
-                    (eventHandler as GUIClickEvent).onClick(player)
+                    (eventHandler as GUIClickListener).onClick(player)
                 }
             }
         }
@@ -124,6 +127,16 @@ internal object GUIScreenManager : Runnable, Listener {
 
             // TODO handle errors coming from here
             screen?.close(player as Player, false)
+        }
+    }
+
+    @EventHandler
+    @Suppress("UNUSED")
+    fun onPlayerQuit(event: PlayerQuitEvent) {
+        event.run {
+
+            /** The player's connection got closed and the screen has to be closed forcibly and not safely */
+            players[player]?.close(player, true)
         }
     }
 
@@ -143,11 +156,6 @@ internal object GUIScreenManager : Runnable, Listener {
 
     /** Called by the GUIScreen. Stores info about the player's screen and close the current safely */
     internal fun open(screen: GUIScreen, player: Player) {
-        val currentScreen = players.remove(player)
-        if (currentScreen != null) {
-            // TODO fire close event
-        }
-
         players[player] = screen
     }
 
@@ -179,7 +187,12 @@ internal object GUIScreenManager : Runnable, Listener {
 /** Used to implement event listener */
 interface GUIEventListener
 
+interface GUIScreenListener : GUIEventListener {
+    fun onOpen(player: Player)
+    fun onClose(player: Player, forced: Boolean)
+}
+
 /** Used to listen to click events */
-interface GUIClickEvent : GUIEventListener {
+interface GUIClickListener : GUIEventListener {
     fun onClick(player: Player) {}
 }

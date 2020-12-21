@@ -1,6 +1,6 @@
 package me.ihdeveloper.react_gui.std
 
-import me.ihdeveloper.react_gui.GUIClickEvent
+import me.ihdeveloper.react_gui.GUIClickListener
 import me.ihdeveloper.react_gui.GUIComponent
 import me.ihdeveloper.react_gui.GUIEventListener
 import me.ihdeveloper.react_gui.itemStack
@@ -16,8 +16,8 @@ class GUICheckbox(
         checked: Boolean = false,
         private val name: String,
         private val description: Array<String>,
-) : GUIComponent(), GUIEventListener, GUIClickEvent {
-    var checked: Boolean = checked
+) : GUIComponent(), GUIEventListener, GUIClickListener {
+    var isChecked: Boolean = checked
         set(value) {
             update()
             field = value
@@ -28,16 +28,16 @@ class GUICheckbox(
     }
 
     override fun onClick(player: Player) {
-        checked = !checked
+        isChecked = !isChecked
     }
 
     override fun render(): ItemStack {
-        return itemStack(Material.INK_SACK, 1, if (checked) CHECKBOX_ON else CHECKBOX_OFF) {
+        return itemStack(Material.INK_SACK, 1, if (isChecked) CHECKBOX_ON else CHECKBOX_OFF) {
             meta {
                 displayName = "§f$name"
 
                 lore = arrayListOf<String>().apply {
-                    add("§7Click to§${if (checked) "c disable" else "a enable"}")
+                    add("§7Click to§${if (isChecked) "c disable" else "a enable"}")
                     add("§7")
                     addAll(description)
                 }
