@@ -3,8 +3,10 @@ package me.ihdeveloper.react_gui.test;
 import me.ihdeveloper.react_gui.GUIScreen;
 import me.ihdeveloper.react_gui.GUIScreenListener;
 import me.ihdeveloper.react_gui.std.GUICheckbox;
+import me.ihdeveloper.react_gui.std.GUIImage;
 import me.ihdeveloper.react_gui.std.GUIRadioGroup;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,15 +21,18 @@ public class JavaGUIScreen extends GUIScreen implements GUIScreenListener {
     private final GUICheckbox mode3 = new GUICheckbox(false, "Mode 3", new String[] { "Description for mode 3" });
 
     public JavaGUIScreen() {
-        super(5, "§1» §9Screen written with §3Java", true);
+        super(6, "§1» §9Screen written with §3Java", true);
 
-        setComponent(3, 2, perm1);
-        setComponent(5, 2, perm2);
-        setComponent(7, 2, perm3);
+        setComponent(3, 3, perm1);
+        setComponent(5, 3, perm2);
+        setComponent(7, 3, perm3);
 
-        setComponent(2, 4, mode1);
-        setComponent(3, 4, mode2);
-        setComponent(4, 4, mode3);
+        setComponent(2, 5, new GUIImage("Mode 1", new String[0], Material.SIGN, 1, (short) 0));
+        setComponent(2, 6, mode1);
+        setComponent(3, 5, new GUIImage("Mode 2", new String[0], Material.CLAY_BALL, 1, (short) 0));
+        setComponent(3, 6, mode2);
+        setComponent(4, 5, new GUIImage("Mode 3", new String[0], Material.DIAMOND, 1, (short) 0));
+        setComponent(4, 6, mode3);
 
         setEventHandler(this);
     }
