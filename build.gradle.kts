@@ -49,9 +49,9 @@ allprojects {
         val stdlib = kotlin("stdlib-jdk8")
 
         if (project == rootProject) {
-            implementation(stdlib)
-        } else {
             compileOnly(stdlib)
+        } else {
+            implementation(stdlib)
         }
 
         // Include the server jar source
@@ -120,14 +120,6 @@ allprojects {
 }
 
 tasks {
-
-    /**
-     * Delete the server after the gradle clean task is done
-     */
-    getByName("clean").doLast {
-        // Delete the server folder
-        server.delete()
-    }
 
     /**
      *  Setup the workspace to develop the plugin
