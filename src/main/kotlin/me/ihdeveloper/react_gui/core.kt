@@ -117,8 +117,8 @@ internal object GUIScreenManager : Runnable, Listener {
                 ) {
                     (eventHandler as GUIClickListener).onClick(player)
 
-                    /** Triggers the component to be re-rendered */
-                    screen.setComponent(slot, component)
+                    /** Triggers the whole screen to be re-rendered */
+                    screen.reRender()
                 }
             }
         }
