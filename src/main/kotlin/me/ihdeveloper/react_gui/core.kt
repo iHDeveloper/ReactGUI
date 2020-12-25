@@ -116,6 +116,9 @@ internal object GUIScreenManager : Runnable, Listener {
                         || action == InventoryAction.PICKUP_ALL)
                 ) {
                     (eventHandler as GUIClickListener).onClick(player)
+
+                    /** Triggers the component to be re-rendered */
+                    screen.setComponent(slot, component)
                 }
             }
         }
