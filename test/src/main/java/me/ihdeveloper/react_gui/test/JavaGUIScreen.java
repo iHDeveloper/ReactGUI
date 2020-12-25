@@ -24,7 +24,7 @@ public class JavaGUIScreen extends GUIScreen implements GUIScreenListener {
     private final GUICheckbox mode3 = new GUICheckbox(false, "Mode 3", new String[] { "Description for mode 3" });
 
     public JavaGUIScreen() {
-        super(6, "§1» §9Screen written with §3Java", true);
+        super(6, "§1» §9Screen written with §6Java", true);
 
         setComponent(3, 2, new GUIImage("Permission 1", new String[0], Material.WHEAT));
         setComponent(3, 3, perm1);
