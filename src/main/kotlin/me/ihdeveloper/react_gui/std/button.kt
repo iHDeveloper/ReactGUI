@@ -15,7 +15,8 @@ class GUIButton(
         private val amount: Int,
         private val data: Short,
 ) : GUIComponent(), GUIClickListener {
-    var handler: ((player: Player) -> Unit)? = null
+    var onLeftClick: ((player: Player) -> Unit)? = null
+    var onRightClick: ((player: Player) -> Unit)? = null
 
     constructor(
             name: String,
@@ -34,8 +35,12 @@ class GUIButton(
         eventHandler = this
     }
 
-    override fun onClick(player: Player) {
-        handler?.invoke(player)
+    override fun onLeftClick(player: Player) {
+        onLeftClick?.invoke(player)
+    }
+
+    override fun onRightClick(player: Player) {
+        onRightClick?.invoke(player)
     }
 
     override fun render(): ItemStack {

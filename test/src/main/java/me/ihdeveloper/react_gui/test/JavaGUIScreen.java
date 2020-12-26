@@ -41,7 +41,7 @@ public class JavaGUIScreen extends GUIScreen implements GUIScreenListener {
         setComponent(4, 6, mode3);
 
         GUIButton closeButton = new GUIButton("§cClose Screen", new String[]{"§7Click to close"}, Material.ARROW);
-        closeButton.setHandler((player) -> {
+        closeButton.setOnLeftClick((player) -> {
             ReactGUI.closeScreen(player);
             return Unit.INSTANCE;
         });

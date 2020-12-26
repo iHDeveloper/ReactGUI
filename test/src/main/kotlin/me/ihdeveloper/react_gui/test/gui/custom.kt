@@ -27,18 +27,17 @@ internal enum class ExpStatus(
     ;
 }
 
-internal class KotlinGUIScreen : GUIScreen(3, "§0» §3[Kotlin] §8Custom Screen"), GUIScreenListener {
+internal class KotlinGUIScreen : GUIScreen(4, "§0» §3[Kotlin] §8Custom Screen"), GUIScreenListener {
     private val group = ExpGroup()
     private val gameModeSwitch = GameModeComponent()
 
     init {
-        for (i in 2..4) {
+        for (i in 2..8) {
             setComponent(i, 2, ExpProgressComponent().also { group.components.add(it) })
         }
-        setComponent(5, 2, ExpAddComponent().also { group.addButton = it })
-        setComponent(6, 2, ExpResetComponent().also { group.resetButton = it })
+        setComponent(4, 3, ExpManageComponent().also { group.button = it })
 
-        setComponent(8, 2, gameModeSwitch)
+        setComponent(6, 3, gameModeSwitch)
 
         eventHandler = this
     }
@@ -67,7 +66,7 @@ internal class GameModeComponent : GUIComponent(), GUIClickListener {
         eventHandler = this
     }
 
-    override fun onClick(player: Player) {
+    override fun onLeftClick(player: Player) {
         mode = (mode + 1) % 3
         with (player) { playSound(location, Sound.ORB_PICKUP, 10F, 5F) }
     }
@@ -122,71 +121,52 @@ internal class ExpProgressComponent : GUIComponent() {
     }
 }
 
-internal class ExpAddComponent : GUIComponent(), GUIClickListener {
+internal class ExpManageComponent : GUIComponent(), GUIClickListener {
     var exp: Int = 0
         set(value) {
             update()
             field = value
         }
 
-    var handler: ((player: Player) -> Unit)? = null
+    var onAdd: (() -> Unit)? = null
+    var onReset: (() -> Unit)? = null
 
     init {
         eventHandler = this
     }
 
-    override fun onClick(player: Player) {
-        handler?.invoke(player)
+    override fun onLeftClick(player: Player) {
+        onAdd?.invoke()
+    }
+
+    override fun onRightClick(player: Player) {
+        onReset?.invoke()
     }
 
     override fun render(): ItemStack {
-        return itemStack(Material.POTION) {
+        return itemStack(Material.EXP_BOTTLE) {
             meta {
-                displayName = "§fAdd experience"
-                lore = arrayListOf("§7Increase the experience value","§7","§8» §eExp: §f$exp")
-            }
-        }
-    }
-}
-
-internal class ExpResetComponent : GUIComponent(), GUIClickListener {
-    var handler: ((player: Player) -> Unit)? = null
-
-    init {
-        eventHandler = this
-    }
-
-    override fun onClick(player: Player) {
-        handler?.invoke(player)
-    }
-
-    override fun render(): ItemStack {
-        return itemStack(Material.POTION, 1, 8261) {
-            meta {
-                addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
-                addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
-
-                displayName = "§fReset experience"
-                lore = arrayListOf("§7Resets the experience")
+                displayName = "§eManage §9Experience"
+                lore = arrayListOf(
+                        "§7Increase the experience value",
+                        "§8» §eExp: §f$exp",
+                        "§7",
+                        "§e+§a5 §9Exp §7(Left Click)",
+                        "§cReset Experience §7(Right Click)"
+                )
             }
         }
     }
 }
 
 internal class ExpGroup {
-    var addButton: ExpAddComponent? = null
+    var button: ExpManageComponent? = null
         set(value) {
-            value?.handler = {
+            value?.onAdd = {
                 exp += 5
                 update()
             }
-
-            field = value
-        }
-
-    var resetButton: ExpResetComponent? = null
-        set(value) {
-            value?.handler = {
+            value?.onReset = {
                 exp = 0
                 update()
             }
@@ -199,7 +179,7 @@ internal class ExpGroup {
     internal var exp: Int = 0
 
     private fun update() {
-        addButton?.exp = exp
+        button?.exp = exp
 
         val currentPercent = (exp * 100) / 50
         val percentPerStage = 100 / components.size

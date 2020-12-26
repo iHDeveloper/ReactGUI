@@ -80,7 +80,7 @@ private fun buildTestScreen(type: String): GUIScreen? = when(type) {
             setComponent(3, 2, GUIImage("Image", arrayOf("A simple image"), Material.CAKE))
             setComponent(5, 2, GUICheckbox(false, "Checkbox 1", arrayOf("§7A simple checkbox")))
             setComponent(7, 2, GUIButton("Simple Button", arrayOf("A simple button"), Material.STONE_BUTTON).apply {
-                handler = { player ->
+                onLeftClick = { player ->
                     player.closeScreen()
                 }
             })

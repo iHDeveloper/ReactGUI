@@ -115,7 +115,12 @@ internal object GUIScreenManager : Runnable, Listener {
                         || action == InventoryAction.PICKUP_HALF
                         || action == InventoryAction.PICKUP_ALL)
                 ) {
-                    (eventHandler as GUIClickListener).onClick(player)
+                    (eventHandler as GUIClickListener).run {
+                        if (action === InventoryAction.PICKUP_ALL)
+                            onLeftClick(player)
+                        else
+                            onRightClick(player)
+                    }
 
                     /** Triggers the whole screen to be re-rendered */
                     screen.reRender()
@@ -201,5 +206,6 @@ interface GUIScreenListener : GUIEventListener {
 
 /** Used to listen to click events */
 interface GUIClickListener : GUIEventListener {
-    fun onClick(player: Player) {}
+    fun onLeftClick(player: Player) {}
+    fun onRightClick(player: Player) {}
 }

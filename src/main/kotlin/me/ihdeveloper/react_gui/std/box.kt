@@ -29,7 +29,7 @@ class GUICheckbox(
         super.eventHandler = this
     }
 
-    override fun onClick(player: Player) {
+    override fun onLeftClick(player: Player) {
         isChecked = !isChecked
         stateHandler?.invoke(player, !isChecked,  isChecked)
     }
