@@ -128,6 +128,8 @@ internal class ExpManageComponent : GUIComponent(), GUIClickListener {
             field = value
         }
 
+    var maxExp: Int = 0
+
     var onAdd: (() -> Unit)? = null
     var onReset: (() -> Unit)? = null
 
@@ -137,10 +139,12 @@ internal class ExpManageComponent : GUIComponent(), GUIClickListener {
 
     override fun onLeftClick(player: Player) {
         onAdd?.invoke()
+        with (player) { playSound(location, Sound.ORB_PICKUP, 0.5F, 2.5F) }
     }
 
     override fun onRightClick(player: Player) {
         onReset?.invoke()
+        with (player) { playSound(location, Sound.ORB_PICKUP, 1F, 5F) }
     }
 
     override fun render(): ItemStack {
@@ -149,9 +153,9 @@ internal class ExpManageComponent : GUIComponent(), GUIClickListener {
                 displayName = "§eManage §9Experience"
                 lore = arrayListOf(
                         "§7Increase the experience value",
-                        "§8» §eExp: §f$exp",
+                        "§8» §9Exp: §e$exp§7/§6$maxExp",
                         "§7",
-                        "§e+§a5 §9Exp §7(Left Click)",
+                        "§aAdds §a+§65 §9Experience §7(Left Click)",
                         "§cReset Experience §7(Right Click)"
                 )
             }
@@ -159,7 +163,9 @@ internal class ExpManageComponent : GUIComponent(), GUIClickListener {
     }
 }
 
-internal class ExpGroup {
+internal class ExpGroup(
+	private val maxExp: Int = 200
+) {
     var button: ExpManageComponent? = null
         set(value) {
             value?.onAdd = {
@@ -171,6 +177,7 @@ internal class ExpGroup {
                 update()
             }
 
+	    value?.maxExp = maxExp
             field = value
         }
 
@@ -181,7 +188,7 @@ internal class ExpGroup {
     private fun update() {
         button?.exp = exp
 
-        val currentPercent = (exp * 100) / 50
+        val currentPercent = (exp * 100) / maxExp
         val percentPerStage = 100 / components.size
 
         for (index in 1..components.size) {
