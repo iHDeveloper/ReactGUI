@@ -23,7 +23,7 @@ The plugin includes a rich standard library to help you build using built-in com
 The API assumes that the inventory is called **Screen**.
 And, the items are called **Components**.
 
-Each **Screen** has mutliple components up to 54. With up to 6 columns. Each row has 9 components at least
+Each **Screen** has multiple components up to 54. With up to 6 columns. Each row has 9 components at least
 
 Each **Component** has multiple states. Changing one of those states will flag the **Component** to be re-rendered.
 
