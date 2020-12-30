@@ -1,4 +1,4 @@
-package me.ihdeveloper.react_gui.test;
+package me.ihdeveloper.react_gui.test.screen;
 
 import kotlin.Unit;
 import me.ihdeveloper.react_gui.GUIScreen;

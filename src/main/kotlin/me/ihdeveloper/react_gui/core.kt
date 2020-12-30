@@ -24,7 +24,7 @@ abstract class GUIComponent {
 }
 
 open class GUIScreen(
-        columns: Int,
+        protected val columns: Int,
         title: String,
 
         /** One player can use this screen */
@@ -41,7 +41,7 @@ open class GUIScreen(
 
     fun setComponent(x: Int, y: Int, component: GUIComponent?) {
         val finalX = min(max(x, 1), 9) - 1
-        val finalY = min(max(y, 1), 6) - 1
+        val finalY = min(max(y, 1), columns) - 1
 
         setComponent((9 * finalY) + finalX, component)
     }
