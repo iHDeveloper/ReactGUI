@@ -23,43 +23,61 @@ abstract class GUIComponent {
     abstract fun render(): ItemStack
 }
 
+open class GUIContainer {
+    protected val components = mutableMapOf<Int, GUIComponent>()
+
+    open fun setComponent(x: Int, y: Int, component: GUIComponent?) {
+        val finalX = min(max(x, 1), 9) - 1
+        val finalY = min(max(y, 1), 6) - 1
+
+        setComponent((9 * finalY) + finalX, component)
+    }
+
+    open fun setComponent(index: Int, component: GUIComponent?) {
+        if (component == null) {
+            components.remove(index)
+            return
+        }
+
+        components[index] = component
+        component.isUpdated = false
+    }
+
+    fun getComponent(index: Int): GUIComponent? = components[index]
+}
+
 open class GUIScreen(
         protected val columns: Int,
         title: String,
 
         /** One player can use this screen */
         private val oneUseOnly: Boolean = true
-) {
+) : GUIContainer() {
     var eventHandler: GUIScreenListener? = null
         protected set
 
     internal var closedByAPI = false
 
-    private val components = mutableMapOf<Int, GUIComponent>()
     private val inventory = Bukkit.createInventory(null, columns * 9, title)
     private var alreadyUsed = false
 
-    fun setComponent(x: Int, y: Int, component: GUIComponent?) {
+    override fun setComponent(x: Int, y: Int, component: GUIComponent?) {
         val finalX = min(max(x, 1), 9) - 1
         val finalY = min(max(y, 1), columns) - 1
 
         setComponent((9 * finalY) + finalX, component)
     }
 
-    fun setComponent(index: Int, component: GUIComponent?) {
+    override fun setComponent(index: Int, component: GUIComponent?) {
         if (component == null) {
-            components.remove(index)
             inventory.setItem(index, null)
+            super.setComponent(index, component)
             return
         }
 
-        components[index] = component
-
-        component.isUpdated = false
+        super.setComponent(index, component)
         inventory.setItem(index, component.render())
     }
-
-    fun getComponent(index: Int): GUIComponent? = components[index]
 
     internal fun open(player: Player) {
         if (oneUseOnly && alreadyUsed) {
