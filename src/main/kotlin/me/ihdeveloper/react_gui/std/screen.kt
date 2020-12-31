@@ -5,9 +5,8 @@ import me.ihdeveloper.react_gui.GUIScreen
 import org.bukkit.Material
 
 private val WALL_IMAGE = GUIImage("§8", arrayOf(), Material.STAINED_GLASS_PANE, 1, 15)
-private val PAGE_NOT_FOUND_IMAGE = GUIImage("§8» §cPage Not Found", arrayOf(), Material.STAINED_GLASS_PANE, 1, 14)
 
-open class GUIPaginator(
+abstract class GUIPaginator(
         pages: Int,
         columns: Int,
         title: String,
@@ -18,8 +17,8 @@ open class GUIPaginator(
             error("The number of pages in paginator should be between 2 and 9")
     }
 
-    private val containers = arrayListOf<GUIContainer?>()
-    private var currentPage = 1
+    protected val containers = arrayListOf<GUIContainer?>()
+    protected var currentPage = 1
         set(value) {
             field = value
             update()
@@ -36,14 +35,29 @@ open class GUIPaginator(
         updateBar()
     }
 
-    private fun updateContainer(container: GUIContainer?) {
+    protected fun updateContainer(container: GUIContainer?) {
         for (index in 1..((columns - 1) * 9)) {
             setComponent(index, container?.getComponent(index))
         }
     }
 
-    private fun updateBar() {
+    protected abstract fun updateBar()
+}
+
+open class GUIFixedPaginator(
+        pages: Int,
+        columns: Int,
+        title: String,
+        oneUseOnly: Boolean = true
+) : GUIPaginator(pages, columns, title, oneUseOnly) {
+
+    override fun updateBar() {
         for (x in 1..9) {
+            if (x > containers.size) {
+                setComponent(x, columns, WALL_IMAGE)
+                continue
+            }
+
             setComponent(x, columns, GUIButton(
                     "§8» §ePage §6$x",
                     arrayOf(when {
@@ -65,4 +79,56 @@ open class GUIPaginator(
             })
         }
     }
+
+}
+
+open class GUIDynamicPaginator(
+        pages: Int,
+        columns: Int,
+        title: String,
+        oneUseOnly: Boolean = true
+) : GUIPaginator(pages, columns, title, oneUseOnly) {
+
+    override fun updateBar() {
+        setComponent(1, columns,
+                if (currentPage > 1)
+                    GUIButton("§8» §eFirst Page", arrayOf("§7Go to page §e1"), Material.BLAZE_ROD).apply {
+                        onLeftClick = {
+                            currentPage = 1
+                        }
+                    }
+                else WALL_IMAGE)
+
+        setComponent(2, columns,
+                if (currentPage > 1)
+                    GUIButton("§8» §ePrevious Page", arrayOf("§7Go to page §e${currentPage - 1}"), Material.STICK).apply {
+                        onLeftClick = {
+                            currentPage--
+                        }
+                    }
+                else WALL_IMAGE)
+
+        for (x in 3..7) {
+            setComponent(x, columns, WALL_IMAGE)
+        }
+
+        setComponent(8, columns,
+                if (currentPage < containers.size)
+                    GUIButton("§8» §eNext Page", arrayOf("§7GO to page §e${currentPage + 1}"), Material.STICK).apply {
+                        onLeftClick = {
+                            currentPage++
+                        }
+                    }
+                else WALL_IMAGE)
+
+        setComponent(9, columns,
+                if (currentPage < containers.size)
+                    GUIButton("§8» §eLast Page", arrayOf("§7Go to page §e${containers.size}"), Material.BLAZE_ROD).apply {
+                        onLeftClick = {
+                            currentPage = containers.size
+                        }
+                    }
+                else WALL_IMAGE)
+    }
+
 }

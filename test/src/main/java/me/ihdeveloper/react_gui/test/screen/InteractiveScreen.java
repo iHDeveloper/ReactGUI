@@ -2,14 +2,14 @@ package me.ihdeveloper.react_gui.test.screen;
 
 import me.ihdeveloper.react_gui.GUIContainer;
 import me.ihdeveloper.react_gui.std.GUICheckbox;
+import me.ihdeveloper.react_gui.std.GUIFixedPaginator;
 import me.ihdeveloper.react_gui.std.GUIImage;
-import me.ihdeveloper.react_gui.std.GUIPaginator;
 import me.ihdeveloper.react_gui.test.gui.ExpGroup;
 import me.ihdeveloper.react_gui.test.gui.ExpManageComponent;
 import me.ihdeveloper.react_gui.test.gui.ExpProgressComponent;
 import org.bukkit.Material;
 
-public class InteractiveScreen extends GUIPaginator {
+public class InteractiveScreen extends GUIFixedPaginator {
 
     public InteractiveScreen() {
         super(3, 5, "§8» Interactive Screen", true);
