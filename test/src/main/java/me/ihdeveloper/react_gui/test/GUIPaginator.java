@@ -21,8 +21,8 @@ public class GUIPaginator extends GUIScreen {
         }
 
         public void setComponent(int x, int y, GUIComponent component) {
-            int finalX = Math.max(1, Math.min(9, x));
-            int finalY = Math.max(1, Math.min(columns, y));
+            int finalX = Math.max(1, Math.min(9, x)) - 1;
+            int finalY = Math.max(1, Math.min(columns, y)) - 1;
             setComponent((9 * finalY) + finalX, component);
         }
 
