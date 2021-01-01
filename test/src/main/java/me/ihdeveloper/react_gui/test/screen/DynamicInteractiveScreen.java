@@ -2,17 +2,17 @@ package me.ihdeveloper.react_gui.test.screen;
 
 import me.ihdeveloper.react_gui.GUIContainer;
 import me.ihdeveloper.react_gui.std.GUICheckbox;
-import me.ihdeveloper.react_gui.std.GUIFixedPaginator;
+import me.ihdeveloper.react_gui.std.GUIDynamicPaginator;
 import me.ihdeveloper.react_gui.std.GUIImage;
 import me.ihdeveloper.react_gui.test.gui.ExpGroup;
 import me.ihdeveloper.react_gui.test.gui.ExpManageComponent;
 import me.ihdeveloper.react_gui.test.gui.ExpProgressComponent;
 import org.bukkit.Material;
 
-public class InteractiveScreen extends GUIFixedPaginator {
+public class DynamicInteractiveScreen extends GUIDynamicPaginator {
 
-    public InteractiveScreen() {
-        super(3, 5, "§8» Interactive Screen", true);
+    public DynamicInteractiveScreen() {
+        super(3, 5, "§8» Dynamic Interactive Screen", true);
 
         GUIContainer firstPage = new GUIContainer();
         GUIContainer secondPage = new GUIContainer();

@@ -7,7 +7,8 @@ import me.ihdeveloper.react_gui.std.GUIButton
 import me.ihdeveloper.react_gui.std.GUICheckbox
 import me.ihdeveloper.react_gui.std.GUIImage
 import me.ihdeveloper.react_gui.test.gui.KotlinGUIScreen
-import me.ihdeveloper.react_gui.test.screen.InteractiveScreen
+import me.ihdeveloper.react_gui.test.screen.DynamicInteractiveScreen
+import me.ihdeveloper.react_gui.test.screen.FixedInteractiveScreen
 import me.ihdeveloper.react_gui.test.screen.JavaGUIScreen
 import org.bukkit.Material
 import org.bukkit.command.Command
@@ -94,8 +95,11 @@ private fun buildTestScreen(type: String): GUIScreen? = when(type) {
     "kotlin" -> {
         KotlinGUIScreen()
     }
-    "interactive" -> {
-        InteractiveScreen()
+    "fixed-interactive" -> {
+        FixedInteractiveScreen()
+    }
+    "dynamic-interactive" -> {
+        DynamicInteractiveScreen()
     }
     else -> null
 }
