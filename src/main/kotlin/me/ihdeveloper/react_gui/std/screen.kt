@@ -88,9 +88,16 @@ open class GUIDynamicPaginator(
         title: String,
         oneUseOnly: Boolean = true
 ) : GUIPaginator(pages, columns, title, oneUseOnly) {
+    protected var isAbleToMoveFaster = true
 
     override fun updateBar() {
-        setComponent(1, columns,
+        if (!isAbleToMoveFaster) {
+            setComponent(2, columns, WALL_IMAGE)
+            setComponent(8, columns, WALL_IMAGE)
+        }
+
+        if (isAbleToMoveFaster)
+            setComponent(1, columns,
                 if (currentPage > 1)
                     GUIButton("§8» §eFirst Page", arrayOf("§7Go to page §e1"), Material.BLAZE_ROD).apply {
                         onLeftClick = {
@@ -99,7 +106,7 @@ open class GUIDynamicPaginator(
                     }
                 else WALL_IMAGE)
 
-        setComponent(2, columns,
+        setComponent(if (isAbleToMoveFaster) 2 else 1, columns,
                 if (currentPage > 1)
                     GUIButton("§8» §ePrevious Page", arrayOf("§7Go to page §e${currentPage - 1}"), Material.STICK).apply {
                         onLeftClick = {
@@ -112,7 +119,7 @@ open class GUIDynamicPaginator(
             setComponent(x, columns, WALL_IMAGE)
         }
 
-        setComponent(8, columns,
+        setComponent(if (isAbleToMoveFaster) 8 else 9, columns,
                 if (currentPage < containers.size)
                     GUIButton("§8» §eNext Page", arrayOf("§7GO to page §e${currentPage + 1}"), Material.STICK).apply {
                         onLeftClick = {
@@ -121,7 +128,8 @@ open class GUIDynamicPaginator(
                     }
                 else WALL_IMAGE)
 
-        setComponent(9, columns,
+        if (isAbleToMoveFaster)
+            setComponent(9, columns,
                 if (currentPage < containers.size)
                     GUIButton("§8» §eLast Page", arrayOf("§7Go to page §e${containers.size}"), Material.BLAZE_ROD).apply {
                         onLeftClick = {

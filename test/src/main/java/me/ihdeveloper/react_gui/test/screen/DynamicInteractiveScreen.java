@@ -13,6 +13,7 @@ public class DynamicInteractiveScreen extends GUIDynamicPaginator {
 
     public DynamicInteractiveScreen() {
         super(3, 5, "§8» Dynamic Interactive Screen", true);
+        setAbleToMoveFaster(true);
 
         GUIContainer firstPage = new GUIContainer();
         GUIContainer secondPage = new GUIContainer();
