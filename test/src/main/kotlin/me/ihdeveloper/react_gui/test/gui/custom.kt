@@ -6,6 +6,8 @@ import me.ihdeveloper.react_gui.GUIScreen
 import me.ihdeveloper.react_gui.GUIScreenListener
 import me.ihdeveloper.react_gui.itemStack
 import me.ihdeveloper.react_gui.meta
+import me.ihdeveloper.react_gui.std.GUIProgressBarPart
+import me.ihdeveloper.react_gui.std.GUIProgressGroup
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -17,23 +19,13 @@ import kotlin.math.max
 
 private val gameModes = arrayOf("Survival", "Creative", "Spectator")
 
-internal enum class ExpStatus(
-        internal val displayName: String,
-        internal val color: Short
-) {
-    EMPTY("§4Empty", 14),
-    INCOMPLETE("§eIncomplete", 4),
-    FULL("§aFull!", 5)
-    ;
-}
-
 internal class KotlinGUIScreen : GUIScreen(4, "§0» §3[Kotlin] §8Custom Screen"), GUIScreenListener {
     private val group = ExpGroup()
     private val gameModeSwitch = GameModeComponent()
 
     init {
         for (i in 2..8) {
-            setComponent(i, 2, ExpProgressComponent().also { group.components.add(it) })
+            setComponent(i, 2, GUIProgressBarPart().also { group.add(it) })
         }
         setComponent(4, 3, ExpManageComponent().also { group.button = it })
 
@@ -100,27 +92,6 @@ internal class GameModeComponent : GUIComponent(), GUIClickListener {
     }
 }
 
-internal class ExpProgressComponent : GUIComponent() {
-    var status: ExpStatus = ExpStatus.EMPTY
-        set(value) {
-            update()
-            field = value
-        }
-
-    override fun render(): ItemStack {
-        return itemStack(Material.STAINED_GLASS_PANE, 1, status.color) {
-            meta {
-                displayName = "§eYour Progress"
-
-                lore = arrayListOf(
-                        "§7",
-                        "§7Status: ${status.displayName}"
-                )
-            }
-        }
-    }
-}
-
 internal class ExpManageComponent : GUIComponent(), GUIClickListener {
     var exp: Int = 0
         set(value) {
@@ -181,23 +152,14 @@ internal class ExpGroup(
             field = value
         }
 
-    val components = mutableListOf<ExpProgressComponent>()
+    private val group = GUIProgressGroup(maxExp, 0)
+
+    fun add(part: GUIProgressBarPart) = group.add(part)
 
     internal var exp: Int = 0
 
     private fun update() {
         button?.exp = exp
-
-        val currentPercent = (exp * 100) / maxExp
-        val percentPerStage = 100 / components.size
-
-        for (index in 1..components.size) {
-            components[index - 1].status = when {
-                currentPercent in (percentPerStage * max(index - 1, 0)) + 1 until (percentPerStage * index) -> ExpStatus.INCOMPLETE
-                currentPercent < (percentPerStage * index) -> ExpStatus.EMPTY
-                currentPercent >= (percentPerStage * index) -> ExpStatus.FULL
-                else -> ExpStatus.EMPTY
-            }
-        }
+        group.current = exp
     }
 }

@@ -10,7 +10,6 @@ import me.ihdeveloper.react_gui.std.GUIProgressBarPart;
 import me.ihdeveloper.react_gui.std.GUIProgressGroup;
 import me.ihdeveloper.react_gui.test.gui.ExpGroup;
 import me.ihdeveloper.react_gui.test.gui.ExpManageComponent;
-import me.ihdeveloper.react_gui.test.gui.ExpProgressComponent;
 import org.bukkit.Material;
 
 public class FixedInteractiveScreen extends GUIFixedPaginator {
@@ -37,9 +36,9 @@ public class FixedInteractiveScreen extends GUIFixedPaginator {
 
         ExpGroup expGroup = new ExpGroup();
         for (int x = 2; x <= 8; x++) {
-            ExpProgressComponent progressComponent = new ExpProgressComponent();
+            GUIProgressBarPart progressComponent = new GUIProgressBarPart();
             thirdPage.setComponent(x, 2, progressComponent);
-            expGroup.getComponents().add(progressComponent);
+            expGroup.add(progressComponent);
         }
 
         ExpManageComponent expManageComponent = new ExpManageComponent();
