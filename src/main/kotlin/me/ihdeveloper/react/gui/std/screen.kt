@@ -1,7 +1,7 @@
-package me.ihdeveloper.react_gui.std
+package me.ihdeveloper.react.gui.std
 
-import me.ihdeveloper.react_gui.GUIContainer
-import me.ihdeveloper.react_gui.GUIScreen
+import me.ihdeveloper.react.gui.GUIContainer
+import me.ihdeveloper.react.gui.GUIScreen
 import org.bukkit.Material
 
 private val WALL_IMAGE = GUIImage("§8", arrayOf(), Material.STAINED_GLASS_PANE, 1, 15)

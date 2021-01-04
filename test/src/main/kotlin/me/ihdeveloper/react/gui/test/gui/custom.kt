@@ -1,13 +1,13 @@
-package me.ihdeveloper.react_gui.test.gui
+package me.ihdeveloper.react.gui.test.gui
 
-import me.ihdeveloper.react_gui.GUIClickListener
-import me.ihdeveloper.react_gui.GUIComponent
-import me.ihdeveloper.react_gui.GUIScreen
-import me.ihdeveloper.react_gui.GUIScreenListener
-import me.ihdeveloper.react_gui.itemStack
-import me.ihdeveloper.react_gui.meta
-import me.ihdeveloper.react_gui.std.GUIProgressBarPart
-import me.ihdeveloper.react_gui.std.GUIProgressGroup
+import me.ihdeveloper.react.gui.GUIClickListener
+import me.ihdeveloper.react.gui.GUIComponent
+import me.ihdeveloper.react.gui.GUIScreen
+import me.ihdeveloper.react.gui.GUIScreenListener
+import me.ihdeveloper.react.gui.itemStack
+import me.ihdeveloper.react.gui.meta
+import me.ihdeveloper.react.gui.std.GUIProgressBarPart
+import me.ihdeveloper.react.gui.std.GUIProgressGroup
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound

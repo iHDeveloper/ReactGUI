@@ -1,4 +1,4 @@
-package me.ihdeveloper.react_gui
+package me.ihdeveloper.react.gui
 
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

@@ -1,8 +1,8 @@
-package me.ihdeveloper.react_gui.std
+package me.ihdeveloper.react.gui.std
 
-import me.ihdeveloper.react_gui.GUIComponent
-import me.ihdeveloper.react_gui.itemStack
-import me.ihdeveloper.react_gui.meta
+import me.ihdeveloper.react.gui.GUIComponent
+import me.ihdeveloper.react.gui.itemStack
+import me.ihdeveloper.react.gui.meta
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 

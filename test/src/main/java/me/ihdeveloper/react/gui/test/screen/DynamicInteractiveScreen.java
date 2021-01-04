@@ -1,21 +1,28 @@
-package me.ihdeveloper.react_gui.test.screen;
+package me.ihdeveloper.react.gui.test.screen;
 
 import kotlin.Unit;
-import me.ihdeveloper.react_gui.GUIContainer;
-import me.ihdeveloper.react_gui.std.GUIButton;
-import me.ihdeveloper.react_gui.std.GUICheckbox;
-import me.ihdeveloper.react_gui.std.GUIFixedPaginator;
-import me.ihdeveloper.react_gui.std.GUIImage;
-import me.ihdeveloper.react_gui.std.GUIProgressBarPart;
-import me.ihdeveloper.react_gui.std.GUIProgressGroup;
-import me.ihdeveloper.react_gui.test.gui.ExpGroup;
-import me.ihdeveloper.react_gui.test.gui.ExpManageComponent;
+import me.ihdeveloper.react.gui.GUIContainer;
+import me.ihdeveloper.react.gui.std.GUIDynamicPaginator;
+import me.ihdeveloper.react.gui.std.GUIProgressBarPart;
+import me.ihdeveloper.react.gui.std.GUIProgressGroup;
+import me.ihdeveloper.react.gui.test.gui.ExpGroup;
+import me.ihdeveloper.react.gui.test.gui.ExpManageComponent;
+import me.ihdeveloper.react.gui.GUIContainer;
+import me.ihdeveloper.react.gui.std.GUIButton;
+import me.ihdeveloper.react.gui.std.GUICheckbox;
+import me.ihdeveloper.react.gui.std.GUIDynamicPaginator;
+import me.ihdeveloper.react.gui.std.GUIImage;
+import me.ihdeveloper.react.gui.std.GUIProgressBarPart;
+import me.ihdeveloper.react.gui.std.GUIProgressGroup;
+import me.ihdeveloper.react.gui.test.gui.ExpGroup;
+import me.ihdeveloper.react.gui.test.gui.ExpManageComponent;
 import org.bukkit.Material;
 
-public class FixedInteractiveScreen extends GUIFixedPaginator {
+public class DynamicInteractiveScreen extends GUIDynamicPaginator {
 
-    public FixedInteractiveScreen() {
-        super(3, 5, "§8» Fixed Interactive Screen", true);
+    public DynamicInteractiveScreen() {
+        super(3, 5, "§8» Dynamic Interactive Screen", true);
+        setAbleToMoveFaster(true);
 
         GUIContainer firstPage = new GUIContainer();
         GUIContainer secondPage = new GUIContainer();
@@ -65,7 +72,7 @@ public class FixedInteractiveScreen extends GUIFixedPaginator {
             return Unit.INSTANCE;
         });
         progressButton.setOnRightClick((player) -> {
-            progressGroup.setCurrent(0);
+            progressGroup.setCurrent(progressGroup.getCurrent() - 5);
             return Unit.INSTANCE;
         });
 

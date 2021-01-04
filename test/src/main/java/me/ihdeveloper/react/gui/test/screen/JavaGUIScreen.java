@@ -1,13 +1,19 @@
-package me.ihdeveloper.react_gui.test.screen;
+package me.ihdeveloper.react.gui.test.screen;
 
 import kotlin.Unit;
-import me.ihdeveloper.react_gui.GUIScreen;
-import me.ihdeveloper.react_gui.GUIScreenListener;
-import me.ihdeveloper.react_gui.ReactGUI;
-import me.ihdeveloper.react_gui.std.GUIButton;
-import me.ihdeveloper.react_gui.std.GUICheckbox;
-import me.ihdeveloper.react_gui.std.GUIImage;
-import me.ihdeveloper.react_gui.std.GUIRadioGroup;
+import me.ihdeveloper.react.gui.GUIScreen;
+import me.ihdeveloper.react.gui.GUIScreenListener;
+import me.ihdeveloper.react.gui.ReactGUI;
+import me.ihdeveloper.react.gui.std.GUIButton;
+import me.ihdeveloper.react.gui.std.GUICheckbox;
+import me.ihdeveloper.react.gui.std.GUIImage;
+import me.ihdeveloper.react.gui.std.GUIRadioGroup;
+import me.ihdeveloper.react.gui.GUIScreen;
+import me.ihdeveloper.react.gui.GUIScreenListener;
+import me.ihdeveloper.react.gui.std.GUIButton;
+import me.ihdeveloper.react.gui.std.GUICheckbox;
+import me.ihdeveloper.react.gui.std.GUIImage;
+import me.ihdeveloper.react.gui.std.GUIRadioGroup;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
