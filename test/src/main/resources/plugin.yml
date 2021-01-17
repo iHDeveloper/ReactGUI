@@ -1,7 +1,7 @@
 name: ReactGUI-Test
 version: 0.1
 author: iHDeveloper
-main: me.ihdeveloper.react_gui.test.Main
+main: me.ihdeveloper.react.gui.test.Main
 
 commands:
   test-screen:

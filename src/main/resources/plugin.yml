@@ -1,4 +1,4 @@
 name: ReactGUI
 version: 1.0
 author: iHDeveloper
-main: me.ihdeveloper.react_gui.Main
+main: me.ihdeveloper.react.gui.Main
