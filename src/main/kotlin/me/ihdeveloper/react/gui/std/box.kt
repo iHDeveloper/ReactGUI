@@ -36,13 +36,13 @@ class GUICheckbox(
 
     override fun render(): ItemStack {
         return itemStack(Material.INK_SACK, 1, if (isChecked) CHECKBOX_ON else CHECKBOX_OFF) {
-            meta {
+            meta(true) {
                 displayName = "§r$name"
 
-                lore = arrayListOf<String>().apply {
+                lore.apply {
                     add("§7Click to§${if (isChecked) "c disable" else "a enable"}")
                     add("§7")
-                    addAll(description)
+                    description.forEach { add(it) }
                 }
             }
         }

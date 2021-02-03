@@ -6,7 +6,7 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
-fun itemStack(
+inline fun itemStack(
         material: Material,
         amount: Int = 1,
         type: Short = 0,
@@ -17,8 +17,19 @@ fun itemStack(
     return itemStack
 }
 
-fun ItemStack.meta(block: ItemMeta.() -> Unit) {
+inline fun ItemStack.meta(clearLore: Boolean = false, block: ItemMeta.() -> Unit) {
     val newItemMeta = itemMeta
+
+    newItemMeta.run {
+        if (lore == null) {
+            lore = mutableListOf()
+        }
+
+        if (clearLore) {
+            lore.clear()
+        }
+    }
+
     block(newItemMeta)
     itemMeta = newItemMeta
 }

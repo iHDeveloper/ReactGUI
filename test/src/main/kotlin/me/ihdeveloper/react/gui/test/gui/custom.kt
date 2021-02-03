@@ -14,8 +14,8 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
-import kotlin.math.min
 import kotlin.math.max
+import kotlin.math.min
 
 private val gameModes = arrayOf("Survival", "Creative", "Spectator")
 
@@ -72,14 +72,13 @@ internal class GameModeComponent : GUIComponent(), GUIClickListener {
         }
 
         return itemStack(material, 1) {
-            meta {
+            meta(true) {
                 displayName = "§eToggle Game Mode"
                 addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
 
-                lore = arrayListOf(
-                        "§7Click to toggle your game mode.",
-                        "§7",
-                ).apply {
+                lore.apply {
+                    add("§7Click to toggle your game mode.")
+                    add("§7")
                     for (index in gameModes.indices) {
                         if (mode == index)
                             add("§8§l» §e§l${gameModes[index]}")
@@ -122,6 +121,7 @@ internal class ExpManageComponent : GUIComponent(), GUIClickListener {
         return itemStack(Material.EXP_BOTTLE) {
             meta {
                 displayName = "§eManage §9Experience"
+
                 lore = arrayListOf(
                         "§7Increase the experience value",
                         "§8» §9Exp: §e$exp§7/§6$maxExp",

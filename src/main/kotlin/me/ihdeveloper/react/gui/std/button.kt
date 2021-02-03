@@ -45,10 +45,10 @@ class GUIButton(
 
     override fun render(): ItemStack {
         return itemStack(material, amount, data) {
-            meta {
+            meta(true) {
                 displayName = "§r$name"
 
-                lore = description.toMutableList()
+                description.forEach { lore.add(it) }
             }
         }
     }

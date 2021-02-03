@@ -28,17 +28,10 @@ class GUIImage(
 
     override fun render(): ItemStack {
         return itemStack(material, amount, data) {
-            meta {
+            meta(true) {
                 displayName = "§r$title"
 
-                if (lore == null) {
-                    lore = mutableListOf()
-                }
-
-                lore.clear()
-                for (line in description) {
-                    lore.add(line)
-                }
+                description.forEach { lore.add(it) }
             }
         }
     }
