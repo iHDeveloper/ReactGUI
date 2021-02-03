@@ -10,11 +10,13 @@ import me.ihdeveloper.react.gui.test.gui.KotlinGUIScreen
 import me.ihdeveloper.react.gui.test.screen.DynamicInteractiveScreen
 import me.ihdeveloper.react.gui.test.screen.FixedInteractiveScreen
 import me.ihdeveloper.react.gui.test.screen.JavaGUIScreen
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
 @Suppress("UNUSED")
@@ -52,14 +54,32 @@ object TestScreenCommand : CommandExecutor {
             return false
 
         val type = args[0]
+
+        if (type == "native") {
+            player.sendMessage("§eRunning native inventory...")
+
+            val startTimestamp = System.nanoTime()
+            val nativeInventory = Bukkit.createInventory(null, 3 * 9, "Native Inventory")
+            nativeInventory.setItem(11, ItemStack(Material.OBSIDIAN))
+            nativeInventory.setItem(13, ItemStack(Material.IRON_SWORD))
+            nativeInventory.setItem(15, ItemStack(Material.COAL_BLOCK))
+            player.openInventory(nativeInventory)
+            player.sendMessage("§eBuilt the native screen in §c${(System.nanoTime() - startTimestamp) / 1e6}ms")
+            return true
+        }
+
+        var startTimestamp = System.nanoTime()
         val screen = buildTestScreen(type)
+        player.sendMessage("§eBuilt the reactive screen in §c${(System.nanoTime() - startTimestamp) / 1e6}ms")
 
         if (screen == null) {
             player.sendMessage("§cThere's no test screen with that name!")
             return true
         }
 
+        startTimestamp = System.nanoTime()
         player.openScreen(screen)
+        player.sendMessage("§eOpening the screen in §c${(System.nanoTime() - startTimestamp) / 1e6}ms")
         return true
     }
 

@@ -18,7 +18,7 @@ fun itemStack(
 }
 
 fun ItemStack.meta(block: ItemMeta.() -> Unit) {
-    itemMeta = itemMeta.apply {
-        block(this)
-    }
+    val newItemMeta = itemMeta
+    block(newItemMeta)
+    itemMeta = newItemMeta
 }

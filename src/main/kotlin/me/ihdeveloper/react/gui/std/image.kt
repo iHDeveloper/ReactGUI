@@ -31,7 +31,14 @@ class GUIImage(
             meta {
                 displayName = "§r$title"
 
-                lore = description.toMutableList()
+                if (lore == null) {
+                    lore = mutableListOf()
+                }
+
+                lore.clear()
+                for (line in description) {
+                    lore.add(line)
+                }
             }
         }
     }
