@@ -17,19 +17,24 @@ inline fun itemStack(
     return itemStack
 }
 
-inline fun ItemStack.meta(clearLore: Boolean = false, block: ItemMeta.() -> Unit) {
-    val newItemMeta = itemMeta
+inline fun ItemStack.meta(block: ItemMeta.() -> Unit) {
+    itemMeta = itemMeta.apply {
+        block(this)
+    }
+}
 
-    newItemMeta.run {
-        if (lore == null) {
-            lore = mutableListOf()
-        }
+inline fun ItemMeta.dynamicLore(clear: Boolean = false, block: MutableList<String>.() -> Unit) {
+    var newLore: MutableList<String>? = lore
 
-        if (clearLore) {
-            lore.clear()
-        }
+    if (newLore != null && clear) {
+        newLore.clear()
     }
 
-    block(newItemMeta)
-    itemMeta = newItemMeta
+    if (newLore == null) {
+        newLore = mutableListOf()
+    }
+
+    lore = newLore.apply {
+        block(this)
+    }
 }

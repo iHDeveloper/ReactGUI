@@ -4,6 +4,7 @@ import me.ihdeveloper.react.gui.GUIClickListener
 import me.ihdeveloper.react.gui.GUIComponent
 import me.ihdeveloper.react.gui.GUIScreen
 import me.ihdeveloper.react.gui.GUIScreenListener
+import me.ihdeveloper.react.gui.dynamicLore
 import me.ihdeveloper.react.gui.itemStack
 import me.ihdeveloper.react.gui.meta
 import me.ihdeveloper.react.gui.std.GUIProgressBarPart
@@ -72,11 +73,11 @@ internal class GameModeComponent : GUIComponent(), GUIClickListener {
         }
 
         return itemStack(material, 1) {
-            meta(true) {
+            meta {
                 displayName = "§eToggle Game Mode"
                 addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
 
-                lore.apply {
+                dynamicLore {
                     add("§7Click to toggle your game mode.")
                     add("§7")
                     for (index in gameModes.indices) {

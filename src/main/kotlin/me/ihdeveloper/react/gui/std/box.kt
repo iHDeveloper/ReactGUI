@@ -3,6 +3,7 @@ package me.ihdeveloper.react.gui.std
 import me.ihdeveloper.react.gui.GUIClickListener
 import me.ihdeveloper.react.gui.GUIComponent
 import me.ihdeveloper.react.gui.GUIEventListener
+import me.ihdeveloper.react.gui.dynamicLore
 import me.ihdeveloper.react.gui.itemStack
 import me.ihdeveloper.react.gui.meta
 import org.bukkit.Material
@@ -36,10 +37,10 @@ class GUICheckbox(
 
     override fun render(): ItemStack {
         return itemStack(Material.INK_SACK, 1, if (isChecked) CHECKBOX_ON else CHECKBOX_OFF) {
-            meta(true) {
+            meta {
                 displayName = "§r$name"
 
-                lore.apply {
+                dynamicLore {
                     add("§7Click to§${if (isChecked) "c disable" else "a enable"}")
                     add("§7")
                     description.forEach { add(it) }

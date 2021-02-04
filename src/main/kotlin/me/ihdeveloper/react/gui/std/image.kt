@@ -1,6 +1,7 @@
 package me.ihdeveloper.react.gui.std
 
 import me.ihdeveloper.react.gui.GUIComponent
+import me.ihdeveloper.react.gui.dynamicLore
 import me.ihdeveloper.react.gui.itemStack
 import me.ihdeveloper.react.gui.meta
 import org.bukkit.Material
@@ -28,10 +29,12 @@ class GUIImage(
 
     override fun render(): ItemStack {
         return itemStack(material, amount, data) {
-            meta(true) {
+            meta {
                 displayName = "§r$title"
 
-                description.forEach { lore.add(it) }
+                dynamicLore {
+                    description.forEach { add(it) }
+                }
             }
         }
     }
