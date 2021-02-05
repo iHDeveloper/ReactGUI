@@ -60,6 +60,7 @@ open class GUIScreen(
 
     private val inventory = Bukkit.createInventory(null, columns * 9, title)
     private var alreadyUsed = false
+    private var hasBeenRendered = false
 
     override fun setComponent(x: Int, y: Int, component: GUIComponent?) {
         val finalX = min(max(x, 1), 9) - 1
@@ -76,7 +77,10 @@ open class GUIScreen(
         }
 
         super.setComponent(index, component)
-        inventory.setItem(index, component.render())
+
+        if (hasBeenRendered) {
+            inventory.setItem(index, component.render())
+        }
     }
 
     internal fun open(player: Player) {
@@ -84,6 +88,14 @@ open class GUIScreen(
             throw IllegalStateException("This screen has already been used by a player!")
         }
         alreadyUsed = true
+
+        if (!hasBeenRendered) {
+            components.forEach { (index, component) ->
+                inventory.setItem(index, component.render())
+            }
+
+            hasBeenRendered = true
+        }
 
         GUIScreenManager.open(this, player)
 
