@@ -34,3 +34,4 @@ jobs:
 
       - store_artifacts:
           path: server/plugins
+          destination: build-artifacts
