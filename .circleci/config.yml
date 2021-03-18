@@ -1,0 +1,34 @@
+version: 2
+jobs:
+  build:
+    parallelism: 1
+    docker:
+      - image: circleci/openjdk:8-jdk
+
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle.kts" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: gradle dependencies
+
+      - run: gradle run-build-tools -PuseLocalDependency=false
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+            - .build-tools
+          key: v1-dependencies-{{ checksum "build.gradle.kts" }}
+
+      # run build
+      - run: gradle build
+

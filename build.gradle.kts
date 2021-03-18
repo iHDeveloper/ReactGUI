@@ -9,6 +9,8 @@ plugins {
     id ("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
+val useLocalDependency: String by project
+
 val server = Server(
         /**
          * Directory of the server
@@ -26,7 +28,7 @@ val buildTools = BuildTools(
         useSpigot = true,
 
         // Use local cached dependency (default = false)
-        useLocalDependency = true
+        useLocalDependency = if (project.hasProperty("useLocalDependency")) useLocalDependency.toBoolean() else true
 )
 
 allprojects {
