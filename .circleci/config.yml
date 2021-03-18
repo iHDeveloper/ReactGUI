@@ -32,3 +32,5 @@ jobs:
       # run build
       - run: gradle build-plugin
 
+      - store_artifacts:
+          path: server/plugins
