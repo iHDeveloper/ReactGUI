@@ -1,10 +1,8 @@
-# ReactGUI **(Coming soon)**
+# ReactGUI
 A spigot plugin API for making reactive inventories. Using the philosophy of [React](https://github.com/facebook/react).
 This plugin will allow you on creating GUIs faster. And, focus on designing them without caring about how it would work.
 
 The plugin includes a rich standard library to help you build using built-in components.
-
-**The plugin is under heavy development**
 
 ## Samples of the prototype of the project
 
@@ -30,4 +28,4 @@ Each **Component** has multiple states. Changing one of those states will flag t
 The screen gets re-rendered every tick. It will re-render any flagged **Components**.
 
 ## Getting started
-The plugin is not ready yet to be tested. But, It will be ready ASAP.
+Checkout the examples [Java](https://github.com/iHDeveloper/ReactGUI/tree/master/test/src/main/java/me/ihdeveloper/react/gui/test/screen) / [Kotlin](https://github.com/iHDeveloper/ReactGUI/tree/master/test/src/main/kotlin/me/ihdeveloper/react/gui/test/gui)

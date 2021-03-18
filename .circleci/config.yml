@@ -1,7 +1,7 @@
+version: 2.1
+
 orbs:
   discord: teka23/discord@0.0.1
-
-version: 2.1
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
     steps:
       - checkout
 
-      - discord/approval-notification:
+      - discord/approval:
           message: Pending approval
 
       # Download and cache dependencies
@@ -59,7 +59,7 @@ jobs:
       - attach_workspace:
           at: ./build-artifacts
 
-      - discord/approval-notification:
+      - discord/approval:
           message: Pending approval (release)
 
       - run:
