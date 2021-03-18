@@ -53,12 +53,6 @@ jobs:
           fail_only: false
 
   publish-release:
-    requires:
-      - build
-    filters:
-      branches:
-        only:
-          - release
     docker:
       - image: cibuilds/github:0.10
     steps:
@@ -74,3 +68,17 @@ jobs:
 
       - discord/status:
           fail_only: false
+
+workflows:
+  version: 2.1
+
+  main:
+    jobs:
+      - build
+      - publish-release:
+          filters:
+            branches:
+              only:
+                - release
+          requires:
+            - build
