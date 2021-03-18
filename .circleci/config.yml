@@ -1,4 +1,8 @@
-version: 2
+orbs:
+  discord: teka23/discord@0.0.1
+
+version: 2.1
+
 jobs:
   build:
     parallelism: 1
@@ -12,6 +16,9 @@ jobs:
     steps:
       - checkout
 
+      - discord/approval-notification:
+          message: Pending approval
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -19,9 +26,13 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: gradle dependencies
+      - run:
+          name: Installing dependencies
+          command: gradle dependencies
 
-      - run: gradle run-build-tools -PuseLocalDependency=false
+      - run:
+          name: Running Build Tools
+          command: gradle run-build-tools -PuseLocalDependency=false
 
       - save_cache:
           paths:
@@ -30,8 +41,36 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle.kts" }}
 
       # run build
-      - run: gradle build-plugin
+      - run:
+          name: Building the plugins...
+          command: gradle build-plugin
 
       - store_artifacts:
           path: server/plugins
-          destination: build-artifacts
+          destination: ./build-artifacts
+
+      - discord/status:
+          fail_only: false
+
+  publish-release:
+    requires:
+      - build
+    filters:
+      branches:
+        only:
+          - release
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: ./build-artifacts
+
+      - discord/approval-notification:
+          message: Pending approval (release)
+
+      - run:
+          name: "Publish Release on GitHub"
+          command: "ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./build-artifacts"
+
+      - discord/status:
+          fail_only: false
