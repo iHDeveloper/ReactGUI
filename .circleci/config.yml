@@ -76,22 +76,25 @@ jobs:
           success_message: ":tada: The $CIRCLE_JOB job has succeeded!"
 
   pre-publish:
-    executor: discord/default
+    docker:
+      - image: cibuilds/github:0.10
     steps:
       - discord/approval:
           message: ":raised_hand: Waiting for approval..."
           mentions: "216180750331019264"
           color: "16098851"
+      - attach_workspace:
+          at: "./.workspace"
+      - run:
+          name: "Lists the build artifacts and version"
+          command: " echo Build Artifacts && ls -al .workspace/build-artifacts && echo && echo Version $(cat .workspace/temp/version.txt)"
 
   publish-release:
     docker:
       - image: cibuilds/github:0.10
     steps:
       - attach_workspace:
-          at: ./build-artifacts
-
-      - attach_workspace:
-          at: ./temp
+          at: "./.workspace"
 
       - discord/notify:
           message: ":rocket: Publishing..."
@@ -99,11 +102,11 @@ jobs:
 
       - run:
           name: "Set version as environment variable"
-          command: "export VERSION=v$(cat ./temp/version.txt)"
+          command: "export VERSION=v$(cat .workspace/temp/version.txt)"
 
       - run:
           name: "Publish Release on GitHub"
-          command: "ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v$(cat ./temp/version.txt) ./build-artifacts"
+          command: "ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} .workspace/build-artifacts"
 
       - discord/status:
           fail_only: false
@@ -117,10 +120,10 @@ workflows:
     jobs:
       - build
       - pre-publish:
-          filters:
-            branches:
-              only:
-                - release
+#          filters:
+#            branches:
+#              only:
+#                - release
           requires:
             - build
       - hold-for-publish:
