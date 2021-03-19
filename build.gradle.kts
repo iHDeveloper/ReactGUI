@@ -164,7 +164,7 @@ tasks {
         dependsOn("download-build-tools")
 
         onlyIf {
-            !buildTools.useLocalDependency && !server.jar.exists()
+            !buildTools.useLocalDependency && !buildTools.serverJar.exists()
         }
 
         doLast {
@@ -188,7 +188,7 @@ tasks {
         dependsOn("run-build-tools")
 
         onlyIf {
-            !buildTools.useLocalDependency && !server.exists
+            !buildTools.useLocalDependency && (!server.exists || (server.exists && server.jar.exists()))
         }
 
         server.mkdir()
