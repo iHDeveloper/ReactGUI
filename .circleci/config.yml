@@ -17,7 +17,7 @@ jobs:
       - checkout
 
       - discord/notify:
-          message: ":rocket: Building..."
+          message: ":tools: Building..."
           color: "16312092"
 
       # Download and cache dependencies
@@ -62,7 +62,7 @@ jobs:
 
       - run:
           name: "Discovering the project version"
-          command: 'mkdir temp && ./gradlew properties | grep -i ^version | egrep -o "([0-9]{1,}\.)+[0-9]{1,}" > ./temp/version.txt'
+          command: 'mkdir temp && gradle properties | grep -i ^version | egrep -o "([0-9]{1,}\.)+[0-9]{1,}" > ./temp/version.txt'
 
       - persist_to_workspace:
           root: .
