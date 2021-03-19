@@ -58,7 +58,7 @@ jobs:
       # Prepare the workspace artifacts to be shared with other jobs
       - run:
           name: "Copy build files into temporary persistent workspace"
-          command: "mkdir build-artifacts && cp -r server/plugins/ build-artifacts/"
+          command: "mkdir build-artifacts && cp server/plugins/*.jar build-artifacts/"
 
       - run:
           name: "Discovering the project version"
@@ -120,10 +120,10 @@ workflows:
     jobs:
       - build
       - pre-publish:
-#          filters:
-#            branches:
-#              only:
-#                - release
+          filters:
+            branches:
+              only:
+                - release
           requires:
             - build
       - hold-for-publish:
