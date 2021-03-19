@@ -35,7 +35,9 @@ internal class KotlinGUIScreen : GUIScreen(4, "§0» §3[Kotlin] §8Custom Scree
         eventHandler = this
     }
 
-    override fun onOpen(player: Player) {}
+    override fun onOpen(player: Player) {
+        Bukkit.getServer().consoleSender.sendMessage("§eA player §7${player.displayName}§e opened the screen!")
+    }
 
     override fun onClose(player: Player, forced: Boolean) {
         if (forced) {

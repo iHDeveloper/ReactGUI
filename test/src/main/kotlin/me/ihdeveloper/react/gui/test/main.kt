@@ -19,6 +19,9 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * The main class for the test plugin
+ */
 @Suppress("UNUSED")
 class Main : JavaPlugin() {
 
