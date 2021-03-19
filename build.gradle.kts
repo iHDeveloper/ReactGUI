@@ -11,14 +11,14 @@ plugins {
 
 val useLocalDependency: String by project
 
-val server = Server(
+internal val server = Server(
         /**
          * Directory of the server
          */
         dir = File("${rootProject.projectDir}/server")
 )
 
-val buildTools = BuildTools(
+internal val buildTools = BuildTools(
 
         // Server Version
         minecraftVersion = "1.8.8",
@@ -323,7 +323,7 @@ fun printIntro() {
     }
 }
 
-class BuildTools (
+internal class BuildTools (
         val minecraftVersion: String,
         val useSpigot: Boolean,
         val useLocalDependency: Boolean
@@ -341,7 +341,7 @@ class BuildTools (
 /**
  * Help making the server and structuring it
  */
-class Server(
+internal class Server(
         val dir: File = File("server")
 ) {
     /**

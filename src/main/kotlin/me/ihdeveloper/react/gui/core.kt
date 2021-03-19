@@ -12,6 +12,9 @@ import org.bukkit.inventory.ItemStack
 import kotlin.math.max
 import kotlin.math.min
 
+/**
+ * Represents a state holder that can be triggered when the data changed
+ */
 abstract class GUIComponent {
     open var eventHandler: GUIEventListener? = null
         protected set
@@ -20,6 +23,9 @@ abstract class GUIComponent {
 
     protected fun update() { isUpdated = true }
 
+    /**
+     * Returns the rendered component as [ItemStack]
+     */
     abstract fun render(): ItemStack
 }
 
@@ -31,6 +37,9 @@ open class GUIContainer(
 ) {
     protected val components = mutableMapOf<Int, GUIComponent>()
 
+    /**
+     * Sets the component in certain position of the container
+     */
     open fun setComponent(x: Int, y: Int, component: GUIComponent?) {
         val finalX = min(max(x, 1), 9) - 1
         val finalY = min(max(y, 1), columns) - 1
@@ -38,6 +47,9 @@ open class GUIContainer(
         setComponent((9 * finalY) + finalX, component)
     }
 
+    /**
+     * Sets the component in certain index of the container
+     */
     open fun setComponent(index: Int, component: GUIComponent?) {
         if (component == null) {
             components.remove(index)
@@ -48,6 +60,9 @@ open class GUIContainer(
         component.isUpdated = false
     }
 
+    /**
+     * Returns a component by certain index
+     */
     fun getComponent(index: Int): GUIComponent? = components[index]
 }
 
@@ -234,12 +249,28 @@ interface GUIEventListener
  * Represents a GUI listener that listens to screen events
  */
 interface GUIScreenListener : GUIEventListener {
+
+    /**
+     * Triggered when a player opens the screen
+     */
     fun onOpen(player: Player)
+
+    /**
+     * Triggered when a player closes the screen
+     */
     fun onClose(player: Player, forced: Boolean)
 }
 
 /** Used to listen to click events */
 interface GUIClickListener : GUIEventListener {
+
+    /**
+     * Triggered when a player lefts click a clickable component
+     */
     fun onLeftClick(player: Player) {}
+
+    /**
+     * Triggered when a player rights click a clickable component
+     */
     fun onRightClick(player: Player) {}
 }

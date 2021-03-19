@@ -11,6 +11,10 @@ import kotlin.math.max
  * Represents a progressbar part as GUI Component
  */
 class GUIProgressBarPart : GUIComponent() {
+
+    /**
+     * Represents the state of the progressbar part
+     */
     enum class State {
         EMPTY,
         INCOMPLETE,
@@ -51,6 +55,9 @@ class GUIProgressGroup(
 
     private val parts = arrayListOf<GUIProgressBarPart>()
 
+    /**
+     * Adds [GUIProgressBarPart] to the group
+     */
     fun add(part: GUIProgressBarPart) {
         parts.add(part)
 

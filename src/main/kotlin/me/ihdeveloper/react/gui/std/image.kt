@@ -7,6 +7,9 @@ import me.ihdeveloper.react.gui.meta
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
+/**
+ * Represents a non-clickable component
+ */
 class GUIImage(
         private val title: String,
         private val description: Array<String> = arrayOf(),

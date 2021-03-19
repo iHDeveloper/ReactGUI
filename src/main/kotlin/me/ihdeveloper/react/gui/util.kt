@@ -6,6 +6,9 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
+/**
+ * Constructs an [ItemStack]
+ */
 inline fun itemStack(
         material: Material,
         amount: Int = 1,
@@ -17,12 +20,18 @@ inline fun itemStack(
     return itemStack
 }
 
+/**
+ * Constructs an [ItemMeta]
+ */
 inline fun ItemStack.meta(block: ItemMeta.() -> Unit) {
     itemMeta = itemMeta.apply {
         block(this)
     }
 }
 
+/**
+ * Changes the lore in the [ItemMeta] in a dynamic way
+ */
 inline fun ItemMeta.dynamicLore(clear: Boolean = false, block: MutableList<String>.() -> Unit) {
     var newLore: MutableList<String>? = lore
 

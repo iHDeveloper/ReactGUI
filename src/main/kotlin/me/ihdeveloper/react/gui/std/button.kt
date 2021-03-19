@@ -9,6 +9,9 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
+/**
+ * Represents clickable component with certain data
+ */
 class GUIButton(
         private val name: String,
         private val description: Array<String> = arrayOf(),

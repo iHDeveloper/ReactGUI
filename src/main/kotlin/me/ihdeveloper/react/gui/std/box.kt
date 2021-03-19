@@ -13,6 +13,9 @@ import org.bukkit.inventory.ItemStack
 private const val CHECKBOX_ON: Short = 10
 private const val CHECKBOX_OFF: Short = 8
 
+/**
+ * Represents a component with one [Boolean] state
+ */
 class GUICheckbox(
         checked: Boolean = false,
         private val name: String,
@@ -85,14 +88,15 @@ class GUIRadioGroup(
     private fun onStateChanged(checkbox: GUICheckbox, old: Boolean, new: Boolean) {
         if (required && old) {
             checkbox.isChecked = true
-        } else {
-            if (old != new) {
-                checkboxes.forEach {
-                    if (it !== checkbox) {
-                        it.isChecked = false
-                    }
-                }
-            }
+            return
+        }
+
+        if (old == new) {
+            return
+        }
+
+        checkboxes.filter { it === checkbox }.forEach {
+            it.isChecked = false
         }
     }
 }
