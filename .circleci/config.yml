@@ -35,6 +35,10 @@ jobs:
           name: Running Build Tools
           command: gradle run-build-tools -PuseLocalDependency=false
 
+      - run:
+          name: Cleaning Build Tools Garbage
+          command: "find .build-tools -mindepth 1 -maxdepth 1 -type d ! -name '*.jar' -exec rm -rf {} \\; && find .build-tools -type f ! -name '*.jar' -delete"
+
       - save_cache:
           paths:
             - ~/.gradle
@@ -44,18 +48,34 @@ jobs:
       # run build
       - run:
           name: Building the plugins...
-          command: gradle build-plugin
+          command: gradle build-plugin -PuseLocalDependency=false
 
+      # Store the artifacts of the build
       - store_artifacts:
           path: server/plugins
           destination: ./build-artifacts
+
+      # Prepare the workspace artifacts to be shared with other jobs
+      - run:
+          name: "Copy build files into temporary persistent workspace"
+          command: "mkdir build-artifacts && cp -r server/plugins/ build-artifacts/"
+
+      - run:
+          name: "Discovering the project version"
+          command: 'mkdir temp && ./gradlew properties | grep -i ^version | egrep -o "([0-9]{1,}\.)+[0-9]{1,}" > ./temp/version.txt'
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build-artifacts
+            - temp
 
       - discord/status:
           fail_only: false
           failure_message: ":red_circle: The $CIRCLE_JOB job has failed!"
           success_message: ":tada: The $CIRCLE_JOB job has succeeded!"
 
-  hold-for-publish:
+  pre-publish:
     executor: discord/default
     steps:
       - discord/approval:
@@ -70,9 +90,16 @@ jobs:
       - attach_workspace:
           at: ./build-artifacts
 
+      - attach_workspace:
+          at: ./temp
+
       - discord/notify:
           message: ":rocket: Publishing..."
           color: "16312092"
+
+      - run:
+          name: "Set version as environment variable"
+          command: "export VERSION=v$(cat ./temp/version.txt)"
 
       - run:
           name: "Publish Release on GitHub"
@@ -89,6 +116,13 @@ workflows:
   main:
     jobs:
       - build
+      - pre-publish:
+          filters:
+            branches:
+              only:
+                - release
+          requires:
+            - build
       - hold-for-publish:
           type: approval
           filters:
@@ -96,11 +130,11 @@ workflows:
               only:
                 - release
           requires:
-            - build
+            - pre-publish
       - publish-release:
           filters:
             branches:
               only:
                 - release
           requires:
-            - build
+            - hold-for-publish
