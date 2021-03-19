@@ -200,7 +200,9 @@ tasks {
             // Wait for 2 seconds to realise the message
             try {
                 Thread.sleep(2 * 1000)
-            } catch (e: Exception) {}
+            } catch (e: InterruptedException) {
+                logger.warn("Sleep has been interrupted!")
+            }
 
             // Since the process didn't stop
             // This means the user indicates to agree on the Minecraft EULA

@@ -7,6 +7,9 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import kotlin.math.max
 
+/**
+ * Represents a progressbar part as GUI Component
+ */
 class GUIProgressBarPart : GUIComponent() {
     enum class State {
         EMPTY,
@@ -33,6 +36,9 @@ class GUIProgressBarPart : GUIComponent() {
     }
 }
 
+/**
+ * Holds the state of multiple [GUIProgressBarPart]
+ */
 class GUIProgressGroup(
         private val max: Int,
         current: Int = 0,

@@ -2,6 +2,9 @@ package me.ihdeveloper.react.gui
 
 import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * The main class for the plugin
+ */
 @Suppress("UNUSED")
 class Main : JavaPlugin() {
     companion object {

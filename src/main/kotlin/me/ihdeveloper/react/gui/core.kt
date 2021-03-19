@@ -23,12 +23,17 @@ abstract class GUIComponent {
     abstract fun render(): ItemStack
 }
 
-open class GUIContainer {
+/**
+ * Holds the components as state and keeps track of them
+ */
+open class GUIContainer(
+        private val columns: Int = 6
+) {
     protected val components = mutableMapOf<Int, GUIComponent>()
 
     open fun setComponent(x: Int, y: Int, component: GUIComponent?) {
         val finalX = min(max(x, 1), 9) - 1
-        val finalY = min(max(y, 1), 6) - 1
+        val finalY = min(max(y, 1), columns) - 1
 
         setComponent((9 * finalY) + finalX, component)
     }
@@ -46,13 +51,16 @@ open class GUIContainer {
     fun getComponent(index: Int): GUIComponent? = components[index]
 }
 
+/**
+ * Represents a container that's being shown as inventory to the player
+ */
 open class GUIScreen(
         protected val columns: Int,
         title: String,
 
         /** One player can use this screen */
         private val oneUseOnly: Boolean = true
-) : GUIContainer() {
+) : GUIContainer(columns) {
     var eventHandler: GUIScreenListener? = null
         protected set
 
@@ -61,13 +69,6 @@ open class GUIScreen(
     private val inventory = Bukkit.createInventory(null, columns * 9, title)
     private var alreadyUsed = false
     private var hasBeenRendered = false
-
-    override fun setComponent(x: Int, y: Int, component: GUIComponent?) {
-        val finalX = min(max(x, 1), 9) - 1
-        val finalY = min(max(y, 1), columns) - 1
-
-        setComponent((9 * finalY) + finalX, component)
-    }
 
     override fun setComponent(index: Int, component: GUIComponent?) {
         if (component == null) {
@@ -229,6 +230,9 @@ internal object GUIScreenManager : Runnable, Listener {
 /** Used to implement event listener */
 interface GUIEventListener
 
+/**
+ * Represents a GUI listener that listens to screen events
+ */
 interface GUIScreenListener : GUIEventListener {
     fun onOpen(player: Player)
     fun onClose(player: Player, forced: Boolean)

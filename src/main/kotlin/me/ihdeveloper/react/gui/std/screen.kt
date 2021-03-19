@@ -6,6 +6,9 @@ import org.bukkit.Material
 
 private val WALL_IMAGE = GUIImage("§8", arrayOf(), Material.STAINED_GLASS_PANE, 1, 15)
 
+/**
+ * Represents the basic functionality of the paginator
+ */
 abstract class GUIPaginator(
         pages: Int,
         columns: Int,
@@ -24,10 +27,19 @@ abstract class GUIPaginator(
             update()
         }
 
+    /**
+     * Adds a page to the paginator
+     */
     fun addPage(container: GUIContainer) = containers.add(container)
 
+    /**
+     * Removes a page from the paginator
+     */
     fun removePage(index: Int) = containers.removeAt(index - 1)
 
+    /**
+     * Returns a certain page by the index from the paginator
+     */
     fun getPage(index: Int): GUIContainer? = containers[index - 1]
 
     protected fun update() {
@@ -44,6 +56,9 @@ abstract class GUIPaginator(
     protected abstract fun updateBar()
 }
 
+/**
+ * Represents a paginator that's static for 9 pages
+ */
 open class GUIFixedPaginator(
         pages: Int,
         columns: Int,
@@ -82,6 +97,9 @@ open class GUIFixedPaginator(
 
 }
 
+/**
+ * Represents a dynamic paginator that can be flexible in more then 9 pages
+ */
 open class GUIDynamicPaginator(
         pages: Int,
         columns: Int,

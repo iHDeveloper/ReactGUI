@@ -50,6 +50,9 @@ class GUICheckbox(
     }
 }
 
+/**
+ * Holds the state of multiple [GUICheckbox]
+ */
 class GUIRadioGroup(
 
         /** True if one option is required to be enabled */
@@ -57,29 +60,39 @@ class GUIRadioGroup(
 ) {
     private val checkboxes = mutableListOf<GUICheckbox>()
 
+    /**
+     * Adds a [GUICheckbox] to the group
+     */
     fun add(checkbox: GUICheckbox) {
         checkbox.stateHandler = { _: Player, old: Boolean, new: Boolean ->
-            if (required && old) {
-                checkbox.isChecked = true
-            } else {
-                if (old != new) {
-                    checkboxes.forEach {
-                        if (it !== checkbox) {
-                            it.isChecked = false
-                        }
-                    }
-                }
-            }
+            onStateChanged(checkbox, old, new)
         }
 
         checkboxes.add(checkbox)
     }
 
+    /**
+     * Removes all components from the group
+     */
     fun clear() {
         checkboxes.forEach {
             it.stateHandler = null
         }
 
         checkboxes.clear()
+    }
+
+    private fun onStateChanged(checkbox: GUICheckbox, old: Boolean, new: Boolean) {
+        if (required && old) {
+            checkbox.isChecked = true
+        } else {
+            if (old != new) {
+                checkboxes.forEach {
+                    if (it !== checkbox) {
+                        it.isChecked = false
+                    }
+                }
+            }
+        }
     }
 }
