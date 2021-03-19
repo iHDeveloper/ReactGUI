@@ -16,8 +16,9 @@ jobs:
     steps:
       - checkout
 
-      - discord/approval:
-          message: Pending approval
+      - discord/notify:
+          message: ":rocket: Building..."
+          color: "16312092"
 
       # Download and cache dependencies
       - restore_cache:
@@ -51,6 +52,16 @@ jobs:
 
       - discord/status:
           fail_only: false
+          failure_message: ":red_circle: The $CIRCLE_JOB job has failed!"
+          success_message: ":tada: The $CIRCLE_JOB job has succeeded!"
+
+  hold-for-publish:
+    executor: discord/default
+    steps:
+      - discord/approval:
+          message: ":raised_hand: Waiting for approval..."
+          mentions: "216180750331019264"
+          color: "16098851"
 
   publish-release:
     docker:
@@ -59,8 +70,9 @@ jobs:
       - attach_workspace:
           at: ./build-artifacts
 
-      - discord/approval:
-          message: Pending approval (release)
+      - discord/notify:
+          message: ":rocket: Publishing..."
+          color: "16312092"
 
       - run:
           name: "Publish Release on GitHub"
@@ -68,6 +80,8 @@ jobs:
 
       - discord/status:
           fail_only: false
+          failure_message: ":red_circle: Failed to publish $CIRCLE_PROJECT_REPONAME/$VERSION"
+          success_message: ":tada: The $CIRCLE_PROJECT_REPONAME/$VERSION has been published successfully!"
 
 workflows:
   version: 2.1
@@ -75,6 +89,14 @@ workflows:
   main:
     jobs:
       - build
+      - hold-for-publish:
+          type: approval
+          filters:
+            branches:
+              only:
+                - release
+          requires:
+            - build
       - publish-release:
           filters:
             branches:
