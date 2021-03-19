@@ -1,4 +1,7 @@
 # ReactGUI
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eb87b1864b9c4497ba093395c3250e3c)](https://app.codacy.com/gh/iHDeveloper/ReactGUI?utm_source=github.com&utm_medium=referral&utm_content=iHDeveloper/ReactGUI&utm_campaign=Badge_Grade_Settings)
+
 A spigot plugin API for making reactive inventories. Using the philosophy of [React](https://github.com/facebook/react).
 This plugin will allow you on creating GUIs faster. And, focus on designing them without caring about how it would work.
 
