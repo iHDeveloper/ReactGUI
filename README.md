@@ -1,5 +1,5 @@
 # ReactGUI
-
+[![](https://jitpack.io/v/iHDeveloper/ReactGUI.svg)](https://jitpack.io/#iHDeveloper/ReactGUI)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/eb87b1864b9c4497ba093395c3250e3c)](https://app.codacy.com/gh/iHDeveloper/ReactGUI?utm_source=github.com&utm_medium=referral&utm_content=iHDeveloper/ReactGUI&utm_campaign=Badge_Grade_Settings)
 
 A spigot plugin API for making reactive inventories. Using the philosophy of [React](https://github.com/facebook/react).
@@ -17,5 +17,10 @@ Each **Component** has multiple states. Changing one of those states will flag t
 
 The screen gets re-rendered every tick. It will re-render any flagged **Components**.
 
-## Getting started
-Checkout the examples [Java](https://github.com/iHDeveloper/ReactGUI/tree/master/test/src/main/java/me/ihdeveloper/react/gui/test/screen) / [Kotlin](https://github.com/iHDeveloper/ReactGUI/tree/master/test/src/main/kotlin/me/ihdeveloper/react/gui/test/gui)
+[Spigot](https://www.spigotmc.org/resources/lib-react-gui.91047/) - [JitPack](https://jitpack.io/#iHDeveloper/ReactGUI)
+
+## Examples
+Checkout the examples
+- [Java](https://github.com/iHDeveloper/ReactGUI/tree/master/test/src/main/java/me/ihdeveloper/react/gui/test/screen)
+- [Kotlin](https://github.com/iHDeveloper/ReactGUI/tree/master/test/src/main/kotlin/me/ihdeveloper/react/gui/test/gui)
+
